@@ -55,12 +55,13 @@ namespace Src.Commands
 
 
 
-            channel = await Context.Guild.CreateTextChannelAsync("Панель менеджера", x=> x.CategoryId = category.Id);
+            channel = await Context.Guild.CreateTextChannelAsync("Открыть панель менеджера", x=> x.CategoryId = category.Id);
 
             compbuilder = new ComponentBuilder();
-            compbuilder.WithSelectMenu(_menuService.GetMenuByName("ManagerMenu"));
 
-            await channel.SendMessageAsync("Выберите тип", components: compbuilder.Build());
+            compbuilder.WithButton(_buttonService.GetButtonByName("ManagerMenuBuilderBtn", null)).Build();
+
+            await channel.SendMessageAsync("Нажмите на кнопку", components: compbuilder.Build());
 
 
             channel = await Context.Guild.CreateTextChannelAsync("Крафт броников", x => x.CategoryId = category.Id);
