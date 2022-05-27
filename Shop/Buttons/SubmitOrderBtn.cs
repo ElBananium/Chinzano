@@ -85,6 +85,8 @@ namespace Shop.Buttons
             if (session.IsSpecialTimeDelivery) timetodelivery = "Сегодня, к" + session.SpecialTime.Hour + ":" + session.SpecialTime.Minute; 
             embed.AddField("Когда доставить?", timetodelivery);
 
+            await channel.SendMessageAsync(embed: embed.Build());
+
             await channelwithorder.Channel.SendMessageAsync("Скоро вам напишет менеджер по продажам, с ним вы сможете обсудить детали");
             await (channelwithorder.Channel as SocketGuildChannel).AddPermissionOverwriteAsync(channelwithorder.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
 
