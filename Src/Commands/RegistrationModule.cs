@@ -76,12 +76,6 @@ namespace Src.Commands
 
 
         }
-        [Command("Test")]
-
-        public async Task testc()
-        {
-            await Context.User.SendMessageAsync("s");
-        }
         public RegistrationModule(ButtonService buttonservice, MenuService menuService, IConfiguration config)
         {
             _buttonService = buttonservice;

@@ -13,10 +13,13 @@ namespace Data.TradeRepositoryInRAM
     {
         private Dictionary<string, RAMTradeRepository> _repos;
 
+        private string _serializefilename;
+
         private object SerializeRepoLock = new object();
 
-        public RAMGenericRepository()
+        public RAMGenericRepository(string serializefilename)
         {
+            _serializefilename = serializefilename;
             _repos = new();
 
 
@@ -27,14 +30,14 @@ namespace Data.TradeRepositoryInRAM
         public void DeserializeRepo()
         {
 
-            if (!File.Exists("repositories.json"))
+            if (!File.Exists(_serializefilename))
             {
                 return;
             }
 
 
             string stringfromfile;
-            using (StreamReader sr = new StreamReader("repositories.json"))
+            using (StreamReader sr = new StreamReader(_serializefilename))
             {
                 stringfromfile = sr.ReadToEndAsync().GetAwaiter().GetResult();
             }
@@ -80,9 +83,9 @@ namespace Data.TradeRepositoryInRAM
             
 
 
-            if (!File.Exists("repositories.json"))
+            if (!File.Exists(_serializefilename))
             {
-                File.Create("repositories.json");
+                File.Create(_serializefilename);
 
             }
             
@@ -91,7 +94,7 @@ namespace Data.TradeRepositoryInRAM
                 var repos = _repos.Values.ToList();
                 var serstring = JsonConvert.SerializeObject(repos);
 
-                using (StreamWriter sw = new StreamWriter("repositories.json"))
+                using (StreamWriter sw = new StreamWriter(_serializefilename))
                 {
                     sw.Write(serstring);
                 }
