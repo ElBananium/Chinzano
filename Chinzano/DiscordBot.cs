@@ -77,6 +77,7 @@ namespace Middleware
 
         private Task Log(LogMessage arg)
         {
+            Console.Write(DateTime.Now.ToString() + " | ");
             Console.Write("[");
             switch (arg.Severity)
             {
@@ -110,6 +111,12 @@ namespace Middleware
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("] | ");
             Console.WriteLine(arg.Message);
+            if(arg.Exception != null)
+            {
+                Console.WriteLine(arg.Exception.Message);
+                Console.WriteLine(arg.Exception.StackTrace);
+                Console.WriteLine(arg.Exception.InnerException);
+            }
             return Task.CompletedTask;
         }
 

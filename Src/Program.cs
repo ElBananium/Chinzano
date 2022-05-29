@@ -10,6 +10,8 @@ using Middleware.Modals;
 using Shop;
 using Shop.Services;
 using Shop.Services.OrderSessionRepository;
+using Shop.Services.OrderStateLogger;
+using Shop.Services.PlacedOrderRepository;
 using Src;
 using Src.Services.CraftingService;
 using Src.Services.RepositoryLogger;
@@ -41,8 +43,9 @@ var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLL
     .UseCommandHandler(0, "~!~", commands)
     .UseButtonHandler(buttonsservice)
     .UseModalHandler(modalservice)
-    .UseMenuHandler(menuservice)
-    .UseLogger();
+    .UseMenuHandler(menuservice);
+
+
 
 
 var ordermiddleware = new OrderShopHandler(ordersession, menuservice, repo, bot.Client, buttonsservice);
@@ -60,6 +63,8 @@ var provider = new ServiceCollection()
     .AddTransient<IRepositoryLogger, RepositoryLogger>()
     .AddTransient<ICraftingService, CraftingService>()
     .AddSingleton<IOrderSessionRepository>(ordersession)
+    .AddTransient<IPlacedOrderRepository, PlacedOrderRepository>()
+    .AddTransient<IOrderStateLogger, OrderStateLogger>()
 
     .BuildServiceProvider();
 
@@ -85,8 +90,10 @@ foreach(var assembly in assemblys)
 
 
 
-
+bot.Client.Log += LogMessage.Log;
 
 bot.Build();
+
+
 
 Task.Delay(-1).GetAwaiter().GetResult();

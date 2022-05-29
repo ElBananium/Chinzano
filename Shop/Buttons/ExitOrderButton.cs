@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Middleware.Buttons;
-using Shop.Services.OrderSessionRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,26 +9,22 @@ using System.Threading.Tasks;
 
 namespace Shop.Buttons
 {
-    public class CloseOrderButton : ButtonBase
+    public class ExitOrderButton : ButtonBase
     {
-        private IOrderSessionRepository _orderRepo;
 
         public override ButtonBuilder GetButton()
         {
-            return new ButtonBuilder() { Label = "Отменить заказ", Style = ButtonStyle.Danger };
+            return new ButtonBuilder() { Label = "Выйти", Style = ButtonStyle.Danger };
         }
 
         public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
         {
-            if(_orderRepo.GetSession((ulong)arg.ChannelId) == null) return;
-            _orderRepo.RemoveSession((ulong)arg.ChannelId);
 
             await (arg.Channel as SocketGuildChannel).DeleteAsync();
         }
 
-        public CloseOrderButton(IOrderSessionRepository orderrepo)
+        public ExitOrderButton()
         {
-            _orderRepo = orderrepo;
         }
     }
 }

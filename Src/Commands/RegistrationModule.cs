@@ -25,7 +25,7 @@ namespace Src.Commands
 
 
         [Command("CreateRegMessage")]
-        public async Task CreateResisrationChannelAndMessageAsync(SocketTextChannel channel)
+        public async Task CreateResisrationChannelAndMessageAsync()
         {
             if (!Context.Guild.GetUser(Context.User.Id).GuildPermissions.Administrator) return;
 
@@ -35,7 +35,7 @@ namespace Src.Commands
             var components = new ComponentBuilder().WithButton(btn);
                 
 
-                await channel.SendMessageAsync("Нажмите", components: components.Build());
+                await Context.Channel.SendMessageAsync("Нажмите", components: components.Build());
         }
 
         [Command("CreateStockCategory")]

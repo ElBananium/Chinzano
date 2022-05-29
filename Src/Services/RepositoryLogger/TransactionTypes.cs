@@ -10,5 +10,7 @@ namespace Src.Services.RepositoryLogger
     {
         Deposit,
         WidthDraw,
+        ToTrade,
+        Traded
     }
 }

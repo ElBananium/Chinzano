@@ -18,8 +18,7 @@ namespace Src.Modals
         public override ModalComponentBuilder GetModalsComponent()
         {
             return new ModalComponentBuilder()
-                .WithTextInput("Игровое имя", "gamenickname")
-                .WithTextInput("Игровая фамилия", "gamesurname")
+                .WithTextInput("Игровой никнейм", "gamenickname")
                 .WithTextInput("Реальное имя", "realname");
         }
 
@@ -31,7 +30,7 @@ namespace Src.Modals
 
 
 
-             await user.ModifyAsync(x => x.Nickname = $"{TextInputsValues["gamenickname"]} {TextInputsValues["gamesurname"]} | {TextInputsValues["realname"]}");
+             await user.ModifyAsync(x => x.Nickname = $"{TextInputsValues["gamenickname"].Trim()} | {TextInputsValues["realname"].Trim()}");
 
 
 
