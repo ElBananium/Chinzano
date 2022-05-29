@@ -12,7 +12,7 @@ namespace Shop.Commands
     public class ShopModule : ModuleBase<SocketCommandContext>
     {
         private MenuService _menuService;
-
+        
 
         [Command("CreateShopCategory")]
         public async Task CreateShopCategory()
@@ -22,11 +22,17 @@ namespace Shop.Commands
             var category = await Context.Guild.CreateCategoryChannelAsync("Магазин");
 
             var channel = await Context.Guild.CreateTextChannelAsync("Заказать", x => x.CategoryId = category.Id);
+            await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new(sendMessages: PermValue.Deny));
             var compbuilder = new ComponentBuilder();
 
             compbuilder.WithSelectMenu(_menuService.GetMenuByName("OrderMenu"));
 
             await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
+
+            using (StreamWriter sw = new("takeorderchannelid.txt"))
+            {
+                sw.Write(channel.Id);
+            }
         }
 
 

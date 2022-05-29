@@ -70,6 +70,7 @@ namespace Shop.Menus
             var embedbuilder = new EmbedBuilder() { Color = Color.Teal, Title = "Ваш заказ"};
             embedbuilder.AddField($"Вы заказали", repo.PublicName);
             embedbuilder.AddField($"Количество", session.HowManyNeed);
+            embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
             if (session.IsTomorrowDelivery) embedbuilder.AddField($"Ко времени", "Завтра");
 
             if (session.IsNowDelivery) embedbuilder.AddField($"Ко времени", "Сейчас");

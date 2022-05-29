@@ -122,7 +122,6 @@ namespace Middleware
 
         private async Task HandleMenuAsync(SocketMessageComponent arg)
         {
-
             await Menu.ExecuteMenuAsync(arg, Client);
         }
 

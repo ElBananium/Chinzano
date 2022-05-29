@@ -49,7 +49,7 @@ namespace Src.Commands
                 var compbuilder = new ComponentBuilder();
 
                 compbuilder.WithSelectMenu(_menuService.GetMenuByName("OwnerMenu"));
-
+           
                 await channel.SendMessageAsync("Выберите тип",components: compbuilder.Build());
 
 

@@ -43,6 +43,12 @@ namespace Shop.Services.OrderStateLogger
             await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(ulong.Parse(_config["publiclogchannelid"])).SendMessageAsync(embed: embed.Build());
         }
 
+        public async Task OrderCanceled(string managername, int numberoforder, string reponame)
+        {
+            var embed = new EmbedBuilder() { Title = $"{reponame} | Заказ#{numberoforder} | Отменён", Color = Color.Red };
+            await SendMessage(embed);
+        }
+
         public OrderStateLogger(DiscordSocketClient client, IConfiguration config)
         {
             _client = client;

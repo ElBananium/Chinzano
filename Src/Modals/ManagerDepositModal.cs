@@ -43,7 +43,6 @@ namespace Src.Modals
             }
 
 
-            await modal.DeferAsync();
         }
 
         public ManagerDepositModal(IGenericRepository repo, IRepositoryLogger replogger)

@@ -52,6 +52,7 @@ namespace Data.TradeRepositoryInRAM
                 repotoadd.Deposit(repo.Count + repo.ToTradeCount);
 
                 repotoadd.ToTrade(repo.ToTradeCount);
+                repotoadd.SetPricePerIten(repo.PricePerItem);
             }
         }
 
@@ -70,8 +71,11 @@ namespace Data.TradeRepositoryInRAM
 
         public TradeRepo GetRepositoryByName(string name)
         {
+            RAMTradeRepository value = null;
+            if(!_repos.TryGetValue(name, out value)) return null;
+
             Task.Run(Serialize);
-            return _repos[name];
+            return value;
             
         }
 
@@ -79,9 +83,6 @@ namespace Data.TradeRepositoryInRAM
 
         private void Serialize()
         {
-
-            
-
 
             if (!File.Exists(_serializefilename))
             {

@@ -16,5 +16,7 @@ namespace Shop.Services.OrderStateLogger
         public Task OrderPicked(int numberoforder, string managername);
 
         public Task OrderTransacted(string managername, int numberoforder, string reponame);
+
+        public Task OrderCanceled(string managername, int numberoforder, string reponame);
     }
 }

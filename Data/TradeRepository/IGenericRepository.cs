@@ -14,6 +14,8 @@ namespace Data.TradeRepository
 
         public IEnumerable<TradeRepo> GetAllRepositories();
 
+
+
         
     }
 }

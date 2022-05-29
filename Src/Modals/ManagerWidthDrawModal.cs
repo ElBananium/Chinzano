@@ -45,8 +45,6 @@ namespace Src.Modals
             }
 
 
-            await modal.DeferAsync();
-
         }
 
         public ManagerWidthDrawModal(IGenericRepository repo, IRepositoryLogger replogger)

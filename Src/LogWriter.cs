@@ -90,7 +90,6 @@ namespace Src
             {
                 LogWriter.WriteLine(arg.Exception.Message);
                 LogWriter.WriteLine(arg.Exception.StackTrace);
-                LogWriter.WriteLine(arg.Exception.InnerException.ToString());
             }
             LogWriter.SaveLog(true, "log.txt");
             return Task.CompletedTask;

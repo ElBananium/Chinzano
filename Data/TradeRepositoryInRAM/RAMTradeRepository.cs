@@ -27,6 +27,14 @@ namespace Data.TradeRepositoryInRAM
             
         }
 
+        public override void SetPricePerIten(uint price)
+        {
+            lock (CountLock)
+            {
+                PricePerItem = price;
+            }
+        }
+
         public override void ToTrade(long count)
         {
             if (count > Count) throw new InvalidDataException("Вы хотите переместить в резерв больше чем есть");

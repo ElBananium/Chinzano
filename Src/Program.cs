@@ -1,5 +1,6 @@
 ﻿using Data.TradeRepository;
 using Data.TradeRepositoryInRAM;
+using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +40,8 @@ shoprepo.AddExistRepository(repo.GetRepositoryByName("bulletproofs"));
 
 var ordersession = new OrderSessionRepository();
 
-var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLLJECkAOUpZWNAFCWu3YfLvoc", new Discord.WebSocket.DiscordSocketConfig() { LogLevel = Discord.LogSeverity.Debug }, configuration)
+var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLLJECkAOUpZWNAFCWu3YfLvoc", new Discord.WebSocket.DiscordSocketConfig() { LogLevel = LogSeverity.Debug, 
+    GatewayIntents = GatewayIntents.Guilds |GatewayIntents.GuildMessages | GatewayIntents.GuildIntegrations }, configuration)
     .UseCommandHandler(0, "~!~", commands)
     .UseButtonHandler(buttonsservice)
     .UseModalHandler(modalservice)
@@ -90,7 +92,15 @@ foreach(var assembly in assemblys)
 
 
 
-bot.Client.Log += LogMessage.Log;
+bot.Client.Log += Src.LogMessage.Log;
+
+AntiExceptionHelper.client = bot.Client;
+AntiExceptionHelper.CurrentGuildId = ulong.Parse(configuration["currentguildid"]);
+AntiExceptionHelper.TechLogChannelId = ulong.Parse(configuration["techlogid"]);
+
+
+
+bot.Client.Log += AntiExceptionHelper.Log;
 
 bot.Build();
 

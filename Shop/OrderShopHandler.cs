@@ -109,6 +109,7 @@ namespace Shop
             var embedbuilder = new EmbedBuilder() { Color = Color.Teal, Title = "Ваш заказ" };
             embedbuilder.AddField($"Вы заказали", repo.PublicName);
             embedbuilder.AddField($"Количество", session.HowManyNeed);
+            embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
             embedbuilder.AddField($"Вам доставят сегодня, к ", time);
             
             var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetButtonByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetButtonByName("CloseOrderButton", null));

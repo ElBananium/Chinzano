@@ -39,14 +39,30 @@ namespace Src.Menus
         public override async Task HandleMenu(SocketMessageComponent modal)
         {
             await modal.DeferAsync();
-            var info = modal.Data.Values.First();
 
+            var messages = await modal.Channel.GetMessagesAsync(100).FlattenAsync();
+
+            if (messages.Count() > 1)
+            {
+                await messages.First().DeleteAsync();
+            }
+
+
+            var info = modal.Data.Values.First();
+          
                 var repository = _repo.GetRepositoryByName(info);
+                if(repository == null)
+            {
+                await AdditionalMenuOwnerHandler(info, modal);
+                return;
+            }
 
                 var embed = new EmbedBuilder() { Color = new Color(187, 27, 78), Title = repository.PublicName };
 
                 embed.AddField("На складе", repository.Count.ToString());
                 embed.AddField("Зарезервировано к продаже", repository.ToTradeCount.ToString());
+                embed.AddField("Цена в магазине", repository.PricePerItem.ToString());
+
 
                 var components = new ComponentBuilder();
                 var adinfo = new Dictionary<string, string>() { { "repname", info } };
@@ -55,13 +71,27 @@ namespace Src.Menus
 
 
             
-            var messages = await modal.Channel.GetMessagesAsync(100).FlattenAsync();
-            if(messages.Count() > 1)
-            {
-                await messages.First().DeleteAsync();
-            }
-                
             
+
+            await modal.Channel.SendMessageAsync("", false, embed.Build(), components: components.Build());
+
+        }
+
+        private async Task AdditionalMenuOwnerHandler(string info, SocketMessageComponent modal)
+        {
+            if (info != "pricesetting") return;
+
+
+            var embed = new EmbedBuilder() { Color = new Color(187, 27, 78), Title = "Настройка цен" };
+            foreach(var repo in _repo.GetAllRepositories())
+            {
+                embed.AddField(repo.PublicName, repo.PricePerItem.ToString());
+            }
+            var components = new ComponentBuilder();
+            components.WithSelectMenu(_menuService.GetMenuByName("OwnerEditPriceMenu"));
+            components.WithButton(_btnservice.GetButtonByName("DeleteThisMsgBtn", null));
+
+
             await modal.Channel.SendMessageAsync("", false, embed.Build(), components: components.Build());
 
         }

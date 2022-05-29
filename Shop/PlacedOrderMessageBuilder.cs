@@ -18,11 +18,13 @@ namespace Shop
             var dict = new Dictionary<string, string>();
             dict.Add("orderid", order.Id.ToString());
             ButtonBuilder btn = null;
+            component.WithButton(buttonService.GetButtonByName("CancelOrder", dict));
 
             if (!order.IsRecived)
             {
                 
                 btn = buttonService.GetButtonByName("RecivePlacedOrderBtn", dict);
+                
             }
 
             if(order.IsRecived && !order.IsPicked)
@@ -33,6 +35,7 @@ namespace Shop
             if (order.IsPicked)
             {
                 btn = buttonService.GetButtonByName("OrderIsTransacted", dict);
+                
             }
             if(btn != null) component.WithButton(btn);
 
@@ -42,10 +45,11 @@ namespace Shop
 
         public static EmbedBuilder GetEmbed(PlacedOrder order, IGenericRepository genericRepository)
         {
+            var repo = genericRepository.GetRepositoryByName(order.TradeRepoName);
             var embed = new EmbedBuilder() { Title = "Заказ#" + order.Id, Color = Color.Magenta };
-            embed.AddField("Что заказано?", genericRepository.GetRepositoryByName(order.TradeRepoName).PublicName);
+            embed.AddField("Что заказано?", repo.PublicName);
             embed.AddField("Сколько заказано?", order.HowManyOrdered);
-
+            embed.AddField("К оплате", order.HowManyOrdered * repo.PricePerItem);
             embed.AddField("Когда доставить?", order.WhatTime);
 
             embed.AddField("Статус товара", order.IsRecived ? "Зарезервирован" : "Не зарезервирован");
