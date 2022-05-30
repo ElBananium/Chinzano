@@ -26,11 +26,11 @@ namespace Src.Buttons
 
         public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
         {
+            await arg.DeferAsync();
 
             var guild = _client.GetGuild(ulong.Parse(_config["currentguildid"]));
 
-
-            var channel = guild.GetTextChannel(arg.Channel.Id);
+            var channel = guild.GetTextChannel((ulong)arg.ChannelId);
 
             await channel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Deny));
 
@@ -54,7 +54,7 @@ namespace Src.Buttons
             
 
 
-            await arg.RespondAsync();
+           
         }
 
         public ManagerMenuBuilderBtn(MenuService menuservice, DiscordSocketClient client, IConfiguration config)

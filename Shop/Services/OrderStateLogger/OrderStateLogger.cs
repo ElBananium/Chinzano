@@ -45,7 +45,7 @@ namespace Shop.Services.OrderStateLogger
 
         public async Task OrderCanceled(string managername, int numberoforder, string reponame)
         {
-            var embed = new EmbedBuilder() { Title = $"{reponame} | Заказ#{numberoforder} | Отменён", Color = Color.Red };
+            var embed = new EmbedBuilder() { Title = $"{reponame} | Заказ#{numberoforder} | Отменён менеджером {managername}", Color = Color.Red };
             await SendMessage(embed);
         }
 

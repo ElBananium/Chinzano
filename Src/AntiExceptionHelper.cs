@@ -19,8 +19,9 @@ namespace Src
             if (arg.Exception == null) return;
 
             var techchannel = client.GetGuild(CurrentGuildId).GetTextChannel(TechLogChannelId);
-            await techchannel.SendMessageAsync(arg.Exception.Message);
-            await techchannel.SendMessageAsync(arg.Exception.StackTrace);
+            if (arg.Exception.Message != null) await techchannel.SendMessageAsync(arg.Exception.Message);
+
+            if(arg.Exception.StackTrace != null) await techchannel.SendMessageAsync(arg.Exception.StackTrace);
 
         }
 
