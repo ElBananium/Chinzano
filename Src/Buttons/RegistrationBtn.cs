@@ -14,14 +14,14 @@ namespace Src.Buttons
     {
 
         private ModalService _modalService;
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Сменить никнейм", Style = ButtonStyle.Primary };
         }
 
-        public async override Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string,string> info)
+        public async override Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            var modal = _modalService.GetModalByName("RegistrationModal", null);
+            var modal = _modalService.GetComponentByName("RegistrationModal", null);
             await arg.RespondWithModalAsync(modal.Build());
         }
 

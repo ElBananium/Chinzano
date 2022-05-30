@@ -15,14 +15,14 @@ namespace Src.Modals
         private IConfiguration _config;
         public override string Title => "Регистрация";
 
-        public override ModalComponentBuilder GetModalsComponent()
+        public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder()
                 .WithTextInput("Игровой никнейм", "gamenickname")
                 .WithTextInput("Реальное имя", "realname");
         }
 
-        public override async Task HandleModal(Dictionary<string,string> TextInputsValues, SocketModal modal)
+        public override async Task OnComponentExecuted(SocketModal modal)
         {
             var guildid = ulong.Parse(_config["currentguildid"]);
             var user = Client

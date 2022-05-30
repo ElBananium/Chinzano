@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Middleware.Components;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,24 +10,13 @@ using System.Threading.Tasks;
 
 namespace Middleware.Modals
 {
-    public abstract class ModalBase
+    public abstract class ModalBase : ComponentBase<ModalComponentBuilder, SocketModal>
     {
-        public ModalBase()
-        {
-            AdditionalInfo = new Dictionary<string, string>();
-        }
-        public string CustomId { get => "ChinzanoBotModal_" + this.GetType().Name+"_"+ JsonConvert.SerializeObject(AdditionalInfo); }
+
 
         public abstract string Title { get; }
 
-        public DiscordSocketClient Client { get; set; }
 
-        public abstract ModalComponentBuilder GetModalsComponent();
-
-        public Dictionary<string, string> AdditionalInfo { get; set; }
-
-
-        public abstract Task HandleModal(Dictionary<string,string> TextInputsValues, SocketModal modal);
-
+        public Dictionary<string, string> TextInputsValues { get; set; }
     }
 }

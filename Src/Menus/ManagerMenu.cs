@@ -22,7 +22,7 @@ namespace Src.Menus
 
         public override int MaxValue => 1;
 
-        public override SelectMenuOptionBuilder[] GetSelectMenuFields()
+        public override SelectMenuOptionBuilder[] GetComponent()
         {
             var allrepos = _repo.GetAllRepositories();
             var fields = new List<SelectMenuOptionBuilder>();
@@ -35,7 +35,7 @@ namespace Src.Menus
             return fields.ToArray();
         }
 
-        public override async Task HandleMenu(SocketMessageComponent modal)
+        public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             var info = modal.Data.Values.First();
 
@@ -47,9 +47,9 @@ namespace Src.Menus
 
             var components = new ComponentBuilder();
             var adinfo = new Dictionary<string, string>() { { "repname", info } };
-            components.WithButton(_btnservice.GetButtonByName("ManagerDepositBtn", adinfo));
-            components.WithButton(_btnservice.GetButtonByName("ManagerWidthdrawBtn", adinfo));
-            components.WithButton(_btnservice.GetButtonByName("DeleteThisMsgBtn", null));
+            components.WithButton(_btnservice.GetComponentByName("ManagerDepositBtn", adinfo));
+            components.WithButton(_btnservice.GetComponentByName("ManagerWidthdrawBtn", adinfo));
+            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
 
 
             await modal.DeferAsync();

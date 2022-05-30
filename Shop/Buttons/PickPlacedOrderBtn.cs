@@ -22,14 +22,14 @@ namespace Shop.Buttons
         private IConfiguration _config;
         private IOrderStateLogger _orderStateLogger;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Взять заказ", Style = ButtonStyle.Success };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            int orderid = int.Parse(info["orderid"]);
+            int orderid = int.Parse(AdditionalInfo["orderid"]);
 
             var order = _placedOrderRepository.GetOrder(orderid);
 

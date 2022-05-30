@@ -11,12 +11,12 @@ namespace Src.Buttons
 {
     public class DeleteThisMsgBtn : ButtonBase
     {
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Выход", Style = ButtonStyle.Danger };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             await arg.DeferAsync();
             await arg.Message.DeleteAsync();

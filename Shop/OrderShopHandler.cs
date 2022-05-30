@@ -60,7 +60,7 @@ namespace Shop
             embed.AddField("Завтра", "Если вы хотите получить ваш товар завтра. Конкретное время вы сможете уточнить позже.");
             embed.AddField("Конкретное время", "Если вы хотите получить ваш товар сегодня, но к конкретному времени");
 
-            var compbuilder = new ComponentBuilder().WithSelectMenu(_menuService.GetMenuByName("WhatTimeOrder"));
+            var compbuilder = new ComponentBuilder().WithSelectMenu(_menuService.GetComponentByName("WhatTimeOrder"));
 
 
 
@@ -112,7 +112,7 @@ namespace Shop
             embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
             embedbuilder.AddField($"Вам доставят сегодня, к ", time);
             
-            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetButtonByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetButtonByName("CloseOrderButton", null));
+            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
 
             await channel.SendMessageAsync(embed: embedbuilder.Build(), components: compbuilder.Build());
 

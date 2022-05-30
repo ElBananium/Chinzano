@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Menus
 {
-    internal class WhatTimeOrder : MenuBase
+    public class WhatTimeOrder : MenuBase
     {
         private IOrderSessionRepository _orderSessionRepo;
         private IGenericRepository _genericRepository;
@@ -27,14 +27,14 @@ namespace Shop.Menus
 
         public override int MaxValue => 1;
 
-        public override SelectMenuOptionBuilder[] GetSelectMenuFields()
+        public override SelectMenuOptionBuilder[] GetComponent()
         {
             return new SelectMenuOptionBuilder[] { new SelectMenuOptionBuilder("-","notchoisen", isDefault:true), new SelectMenuOptionBuilder("Сейчас", "now",isDefault: false),
             new SelectMenuOptionBuilder("Завтра", "tomorrow",isDefault: false),
             new SelectMenuOptionBuilder("Конкретное время", "currenttime",isDefault: false) };
         }
 
-        public override async Task HandleMenu(SocketMessageComponent modal)
+        public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             
                 var session = _orderSessionRepo.GetSession((ulong)modal.ChannelId);
@@ -75,7 +75,7 @@ namespace Shop.Menus
 
             if (session.IsNowDelivery) embedbuilder.AddField($"Ко времени", "Сейчас");
 
-            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetButtonByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetButtonByName("CloseOrderButton", null));
+            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
 
             await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(channel.Id).SendMessageAsync(embed: embedbuilder.Build(), components: compbuilder.Build());
             

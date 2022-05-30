@@ -19,17 +19,17 @@ namespace Src.Buttons
 
         private ModalService _modals;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Скрафтить", Style = ButtonStyle.Primary };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
            
 
 
-            await arg.RespondWithModalAsync(_modals.GetModalByName("BulletproofsCraftModal", null).Build());
+            await arg.RespondWithModalAsync(_modals.GetComponentByName("BulletproofsCraftModal", null).Build());
 
         }
 

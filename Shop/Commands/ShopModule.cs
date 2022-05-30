@@ -25,7 +25,7 @@ namespace Shop.Commands
             await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new(sendMessages: PermValue.Deny));
             var compbuilder = new ComponentBuilder();
 
-            compbuilder.WithSelectMenu(_menuService.GetMenuByName("OrderMenu"));
+            compbuilder.WithSelectMenu(_menuService.GetComponentByName("OrderMenu"));
 
             await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
 

@@ -30,7 +30,7 @@ namespace Src.Commands
             if (!Context.Guild.GetUser(Context.User.Id).GuildPermissions.Administrator) return;
 
             await Context.Message.DeleteAsync();
-                var btn = _buttonService.GetButtonByName("RegistrationBtn", null);
+                var btn = _buttonService.GetComponentByName("RegistrationBtn", null);
 
             var components = new ComponentBuilder().WithButton(btn);
                 
@@ -48,7 +48,7 @@ namespace Src.Commands
                 var channel = await Context.Guild.CreateTextChannelAsync("Панель основателя", x => x.CategoryId = category.Id);
                 var compbuilder = new ComponentBuilder();
 
-                compbuilder.WithSelectMenu(_menuService.GetMenuByName("OwnerMenu"));
+                compbuilder.WithSelectMenu(_menuService.GetComponentByName("OwnerMenu"));
            
                 await channel.SendMessageAsync("Выберите тип",components: compbuilder.Build());
 
@@ -59,7 +59,7 @@ namespace Src.Commands
 
             compbuilder = new ComponentBuilder();
 
-            compbuilder.WithButton(_buttonService.GetButtonByName("ManagerMenuBuilderBtn", null)).Build();
+            compbuilder.WithButton(_buttonService.GetComponentByName("ManagerMenuBuilderBtn", null)).Build();
 
             await channel.SendMessageAsync("Нажмите на кнопку", components: compbuilder.Build());
 
@@ -68,7 +68,7 @@ namespace Src.Commands
 
 
             compbuilder = new ComponentBuilder();
-            compbuilder.WithButton(_buttonService.GetButtonByName("BulletproofsCraftButton", null));
+            compbuilder.WithButton(_buttonService.GetComponentByName("BulletproofsCraftButton", null));
 
             await channel.SendMessageAsync("Просто укажите сколько вы хотите получить.", components: compbuilder.Build());
 

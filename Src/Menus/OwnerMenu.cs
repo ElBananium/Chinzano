@@ -23,7 +23,7 @@ namespace Src.Menus
 
         public override int MaxValue => 1;
 
-        public override SelectMenuOptionBuilder[] GetSelectMenuFields()
+        public override SelectMenuOptionBuilder[] GetComponent()
         {
             var allrepos = _repo.GetAllRepositories();
             var fields = new List<SelectMenuOptionBuilder>();
@@ -36,7 +36,7 @@ namespace Src.Menus
             return fields.ToArray();
         }
 
-        public override async Task HandleMenu(SocketMessageComponent modal)
+        public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             await modal.DeferAsync();
 
@@ -66,8 +66,8 @@ namespace Src.Menus
 
                 var components = new ComponentBuilder();
                 var adinfo = new Dictionary<string, string>() { { "repname", info } };
-                components.WithButton(_btnservice.GetButtonByName("OwnerEditBtn", adinfo));
-            components.WithButton(_btnservice.GetButtonByName("DeleteThisMsgBtn", null));
+                components.WithButton(_btnservice.GetComponentByName("OwnerEditBtn", adinfo));
+            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
 
 
             
@@ -88,8 +88,8 @@ namespace Src.Menus
                 embed.AddField(repo.PublicName, repo.PricePerItem.ToString());
             }
             var components = new ComponentBuilder();
-            components.WithSelectMenu(_menuService.GetMenuByName("OwnerEditPriceMenu"));
-            components.WithButton(_btnservice.GetButtonByName("DeleteThisMsgBtn", null));
+            components.WithSelectMenu(_menuService.GetComponentByName("OwnerEditPriceMenu", null));
+            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
 
 
             await modal.Channel.SendMessageAsync("", false, embed.Build(), components: components.Build());

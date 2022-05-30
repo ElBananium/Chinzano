@@ -29,7 +29,7 @@ namespace Shop.Menus
 
         public override int MaxValue => 1;
 
-        public override SelectMenuOptionBuilder[] GetSelectMenuFields()
+        public override SelectMenuOptionBuilder[] GetComponent()
         {
             var opt = new List<SelectMenuOptionBuilder>();
             opt.Add(new SelectMenuOptionBuilder("-", "notchoisen", isDefault: true));
@@ -41,7 +41,7 @@ namespace Shop.Menus
             return opt.ToArray();
         }
 
-        public override async Task HandleMenu(SocketMessageComponent modal)
+        public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             await modal.DeferAsync();
             var guild = _client.GetGuild(ulong.Parse(_config["currentguildid"]));
@@ -56,7 +56,7 @@ namespace Shop.Menus
 
             _orderSessionService.AddNewSession(modal.User.Id, channel.Id, modal.Data.Values.First());
 
-            var components = new ComponentBuilder().WithButton(_btnservice.GetButtonByName("CloseOrderButton", null));
+            var components = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
 
             await channel.SendMessageAsync("Сколько вам нужно?", components: components.Build());
 

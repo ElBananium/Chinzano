@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Middleware.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +9,14 @@ using System.Threading.Tasks;
 
 namespace Middleware.Menu
 {
-    public abstract class MenuBase
+    public abstract class MenuBase : ComponentBase<IEnumerable<SelectMenuOptionBuilder>, SocketMessageComponent>
     {
-        public string CustomId { get => "ChinzanoBotMenu_" + this.GetType().Name; }
+
 
         public abstract string PlaceHolder { get; }
         public abstract int MinValue { get; }
         public abstract int MaxValue { get; }
 
-        public DiscordSocketClient Client { get; set; }
 
-        public abstract SelectMenuOptionBuilder[] GetSelectMenuFields();
-
-
-        public abstract Task HandleMenu(SocketMessageComponent modal);
     }
 }

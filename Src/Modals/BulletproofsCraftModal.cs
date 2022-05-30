@@ -26,12 +26,12 @@ namespace Src.Modals
 
         public override string Title => "Крафт броников";
 
-        public override ModalComponentBuilder GetModalsComponent()
+        public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder().WithTextInput("Сколько броников скрафтить?", "count", TextInputStyle.Short);
         }
 
-        public override async Task HandleModal(Dictionary<string, string> TextInputsValues, SocketModal modal)
+        public override async Task OnComponentExecuted(SocketModal modal)
         {
             
                 int count;

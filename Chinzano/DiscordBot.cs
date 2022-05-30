@@ -57,13 +57,9 @@ namespace Middleware
 
         private async Task HandleButtonAsync(SocketMessageComponent arg)
         {
-            await Buttons.ExecuteButtonAsync(arg);
+            await Buttons.ExecuteComponentAsync(arg);
         }
 
-        private async Task ClientReady()
-        {
-            
-        }
 
         public void ConfigureHandlers(bool UseButtonHandler, bool UseCommandHandler, bool UseModalHandler, bool UseMenuHandler, bool UseLogger)
         {
@@ -122,12 +118,12 @@ namespace Middleware
 
         private async Task HandleMenuAsync(SocketMessageComponent arg)
         {
-            await Menu.ExecuteMenuAsync(arg, Client);
+            await Menu.ExecuteComponentAsync(arg);
         }
 
         private async Task HandleModalAsync(SocketModal arg)
         {
-            await Modals.ExecuteModalAsync(arg, Client);
+            await Modals.ExecuteComponentAsync(arg);
         }
 
         public async Task StartAsync(string token)

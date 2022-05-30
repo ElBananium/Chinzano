@@ -72,9 +72,6 @@ var provider = new ServiceCollection()
 
 
 bot.AddServiceProvider(provider);
-buttonsservice.AddServiceProvider(provider);
-modalservice.AddServiceProvider(provider);
-menuservice.AddServiceProvider(provider);
 
 
 List<Assembly> assemblys = new List<Assembly>();
@@ -84,9 +81,9 @@ assemblys.Add(typeof(IShopGenericRepository).Assembly);
 
 foreach(var assembly in assemblys)
 {
-    buttonsservice.AddModules(assembly);
-    modalservice.AddModules(assembly);
-    menuservice.AddModules(assembly);
+    buttonsservice.AddModules(assembly, provider, bot.Client);
+    modalservice.AddModules(assembly, provider, bot.Client);
+    menuservice.AddModules(assembly, provider, bot.Client);
     commands.AddModulesAsync(assembly: assembly, provider).GetAwaiter().GetResult();
 }
 

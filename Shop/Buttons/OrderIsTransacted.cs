@@ -22,14 +22,14 @@ namespace Shop.Buttons
         private IGenericRepository _genericRepository;
         private IOrderStateLogger _orderStateLogger;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Закрыть заказ", Style = ButtonStyle.Danger };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            int orderid = int.Parse(info["orderid"]);
+            int orderid = int.Parse(AdditionalInfo["orderid"]);
 
             var order = _placedOrderRepository.GetOrder(orderid);
 
@@ -48,7 +48,7 @@ namespace Shop.Buttons
             var resultembed = new EmbedBuilder() { Title = "Менеджер закрыл ваш заказ", Color = Color.Green }.AddField("Ваш обсуживал менеджер", order.WhosPickedNickname).AddField("Не забудьте оставить отзыв", "Удачи вам");
             
             
-            var compbuilder = new ComponentBuilder().WithButton(_buttonService.GetButtonByName("ExitOrderButton", null)).Build();
+            var compbuilder = new ComponentBuilder().WithButton(_buttonService.GetComponentByName("ExitOrderButton", null)).Build();
             await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(order.ChannelId).AddPermissionOverwriteAsync(arg.User, new(viewChannel: PermValue.Deny));
             await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(order.ChannelId).SendMessageAsync(embed: resultembed.Build(), components: compbuilder) ;
 

@@ -20,7 +20,7 @@ namespace Src.Modals
 
         public override string Title => "Если вы не хотите менять, укажите -1";
 
-        public override ModalComponentBuilder GetModalsComponent()
+        public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder()
                  .WithTextInput("Склад", "storage")
@@ -28,7 +28,7 @@ namespace Src.Modals
                  .WithTextInput("Цена за 1 штуку", "price");
         }
 
-        public override async Task HandleModal(Dictionary<string, string> TextInputsValues, SocketModal modal)
+        public override async Task OnComponentExecuted(SocketModal modal)
         {
             long storage;
             long deliverystorage;
@@ -75,7 +75,7 @@ namespace Src.Modals
 
                 var compbuilder = new ComponentBuilder();
 
-                compbuilder.WithSelectMenu(_menuService.GetMenuByName("OrderMenu"));
+                compbuilder.WithSelectMenu(_menuService.GetComponentByName("OrderMenu"));
 
                 await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
 

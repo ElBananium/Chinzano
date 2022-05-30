@@ -12,12 +12,12 @@ namespace Shop.Buttons
     public class ExitOrderButton : ButtonBase
     {
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Выйти", Style = ButtonStyle.Danger };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
 
             await (arg.Channel as SocketGuildChannel).DeleteAsync();

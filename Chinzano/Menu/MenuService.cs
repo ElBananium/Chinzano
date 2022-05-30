@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Middleware.Components;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,93 +12,39 @@ using System.Threading.Tasks;
 
 namespace Middleware.Menu
 {
-    public class MenuService
+    public class MenuService : ComponentService<IEnumerable<SelectMenuOptionBuilder>, SocketMessageComponent, MenuBase, SelectMenuBuilder>
     {
-        private IServiceProvider _serviceProvider;
-
-        private Dictionary<string, Type> _menubuilders;
-
-
-
-        public MenuService()
+        public override async Task ExecuteComponentAsync(SocketMessageComponent arg)
         {
-            _menubuilders = new Dictionary<string, Type>();
-        }
-
-        public MenuService AddServiceProvider(IServiceProvider provider)
-        {
-            _serviceProvider = provider;
-            return this;
-        }
-
-
-        private MenuBase CreateMenu(Type Modal)
-        {
-
-            List<object> args = new List<object>();
-
-            var constructor = Modal.GetConstructors().First();
-            var parameters = constructor.GetParameters();
-            if (parameters.Length != 0)
-            {
-
-
-
-
-                foreach (var parameter in parameters)
-                {
-                    Type paramtype = parameter.ParameterType;
-
-                    args.Add(_serviceProvider.GetRequiredService(paramtype));
-                }
-            }
-            return constructor.Invoke(args.ToArray()) as MenuBase;
-        }
-
-        public async Task ExecuteMenuAsync(SocketMessageComponent arg, DiscordSocketClient client)
-        {
-            var btn = _menubuilders[arg.Data.CustomId];
+            var btn = _addedComponentsTypes[arg.Data.CustomId.Split("_")[1]];
             if (btn == null) return;
 
 
+            var infostring = arg.Data.CustomId.Split("_")[2];
+            Dictionary<string, string> info = JsonConvert.DeserializeObject<Dictionary<string, string>>(infostring);
 
-
-            var modalbase = CreateMenu(btn);
-            modalbase.Client = client;
+            var modalbase = CreateComponent(btn, info, Client, (arg.User as SocketGuildUser).Guild);
             if (arg.Data.Values.Any(x => x == "notchoisen"))
             {
                 await arg.DeferAsync();
                 return;
             }
-            await modalbase.HandleMenu(arg);
-
+            await modalbase.OnComponentExecuted(arg);
         }
 
-        public void AddModules(Assembly assembly)
+
+        public override SelectMenuBuilder GetComponentByName(string name, Dictionary<string, string> adinfo = null)
         {
-            var modalstypes = assembly.GetTypes().Where(x => x.BaseType == typeof(MenuBase)).ToArray();
+            var modalbuilder = _addedComponentsTypes.Values.First(x => x.Name == name);
 
-            foreach (var modalbuilder in modalstypes)
-            {
-                var resbtn = CreateMenu(modalbuilder);
-
-                _menubuilders.Add(resbtn.CustomId, modalbuilder);
-            }
-
-        }
-
-        public SelectMenuBuilder GetMenuByName(string name)
-        {
-            var modalbuilder = _menubuilders.Values.First(x => x.Name == name);
-
-            var modadd = CreateMenu(modalbuilder);
+            var modadd = CreateComponent(modalbuilder, adinfo, Client, null);
 
 
-            var modal = new SelectMenuBuilder() { CustomId = modadd.CustomId, Placeholder = modadd.PlaceHolder, MinValues = modadd.MinValue, MaxValues = modadd.MaxValue}.WithOptions(modadd.GetSelectMenuFields().ToList());
+            var modal = new SelectMenuBuilder() { CustomId = modadd.CustomId, Placeholder = modadd.PlaceHolder, MinValues = modadd.MinValue, MaxValues = modadd.MaxValue }.WithOptions(modadd.GetComponent().ToList());
 
 
             return modal;
-
         }
+
     }
 }

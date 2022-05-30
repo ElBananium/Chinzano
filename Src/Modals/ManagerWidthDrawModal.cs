@@ -18,13 +18,13 @@ namespace Src.Modals
         private IRepositoryLogger _replogger;
         public override string Title => "Снять";
 
-        public override ModalComponentBuilder GetModalsComponent()
+        public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder()
                 .WithTextInput("Сколько снять?", "storage");
         }
 
-        public override async Task HandleModal(Dictionary<string, string> TextInputsValues, SocketModal modal)
+        public override async Task OnComponentExecuted(SocketModal modal)
         {
             long count;
             if (!long.TryParse(TextInputsValues["storage"], out count)) return;

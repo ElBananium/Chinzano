@@ -19,14 +19,14 @@ namespace Shop.Buttons
         private ButtonService _buttonService;
         private IOrderStateLogger _orderStateLogger;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Зарезервировать товар", Style = ButtonStyle.Primary };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            int orderid = int.Parse(info["orderid"]);
+            int orderid = int.Parse(AdditionalInfo["orderid"]);
 
 
 

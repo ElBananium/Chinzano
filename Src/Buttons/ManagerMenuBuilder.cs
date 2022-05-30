@@ -19,12 +19,12 @@ namespace Src.Buttons
 
         private IConfiguration _config;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Style = ButtonStyle.Success, Label = "Открыть меню менеджера" };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             await arg.DeferAsync();
 
@@ -48,7 +48,7 @@ namespace Src.Buttons
 
 
             var compbuilder = new ComponentBuilder();
-            compbuilder.WithSelectMenu(_menuService.GetMenuByName("ManagerMenu"));
+            compbuilder.WithSelectMenu(_menuService.GetComponentByName("ManagerMenu"));
             await createdchannel.SendMessageAsync("Выберите тип", components: compbuilder.Build());
 
             

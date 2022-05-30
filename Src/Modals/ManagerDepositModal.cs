@@ -19,13 +19,13 @@ namespace Src.Modals
 
         public override string Title => "Положить";
 
-        public override ModalComponentBuilder GetModalsComponent()
+        public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder()
                 .WithTextInput("Сколько положить?", "storage");
         }
 
-        public override async Task HandleModal(Dictionary<string, string> TextInputsValues, SocketModal modal)
+        public override async Task OnComponentExecuted(SocketModal modal)
         {
             long count;
             if (!long.TryParse(TextInputsValues["storage"], out count)) return;

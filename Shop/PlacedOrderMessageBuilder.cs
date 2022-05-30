@@ -18,23 +18,23 @@ namespace Shop
             var dict = new Dictionary<string, string>();
             dict.Add("orderid", order.Id.ToString());
             ButtonBuilder btn = null;
-            component.WithButton(buttonService.GetButtonByName("CancelOrder", dict));
+            component.WithButton(buttonService.GetComponentByName("CancelOrder", dict));
 
             if (!order.IsRecived)
             {
                 
-                btn = buttonService.GetButtonByName("RecivePlacedOrderBtn", dict);
+                btn = buttonService.GetComponentByName("RecivePlacedOrderBtn", dict);
                 
             }
 
             if(order.IsRecived && !order.IsPicked)
             {
-                btn = buttonService.GetButtonByName("PickPlacedOrderBtn", dict);
+                btn = buttonService.GetComponentByName("PickPlacedOrderBtn", dict);
                 
             }
             if (order.IsPicked)
             {
-                btn = buttonService.GetButtonByName("OrderIsTransacted", dict);
+                btn = buttonService.GetComponentByName("OrderIsTransacted", dict);
                 
             }
             if(btn != null) component.WithButton(btn);

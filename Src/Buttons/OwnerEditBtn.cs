@@ -17,14 +17,14 @@ namespace Src.Buttons
 
         private ModalService _modalService;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Редактировать", Style = ButtonStyle.Primary };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            var modal = _modalService.GetModalByName("OwnerEditModal", info);
+            var modal = _modalService.GetComponentByName("OwnerEditModal", AdditionalInfo);
 
             await arg.RespondWithModalAsync(modal.Build());
         }

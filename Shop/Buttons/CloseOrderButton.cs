@@ -14,12 +14,12 @@ namespace Shop.Buttons
     {
         private IOrderSessionRepository _orderRepo;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Отменить заказ", Style = ButtonStyle.Danger };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             if(_orderRepo.GetSession((ulong)arg.ChannelId) == null) return;
             _orderRepo.RemoveSession((ulong)arg.ChannelId);

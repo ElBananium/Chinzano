@@ -24,12 +24,12 @@ namespace Shop.Buttons
         private IPlacedOrderRepository _placedOrderRepository;
         private IOrderStateLogger _orderStateLogger;
 
-        public override ButtonBuilder GetButton()
+        public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Подтвердить", Style = ButtonStyle.Success };
         }
 
-        public override async Task OnButtonClicked(SocketMessageComponent arg, Dictionary<string, string> info)
+        public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             
                 var session = _orderSession.GetSession((ulong)arg.ChannelId);
