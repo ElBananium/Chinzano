@@ -23,7 +23,7 @@ namespace Shop.Buttons
 
         public override ButtonBuilder GetComponent()
         {
-            return new ButtonBuilder() { Label = "Закрыть заказ", Style = ButtonStyle.Danger };
+            return new ButtonBuilder() { Label = "Заказ завершён", Style = ButtonStyle.Success };
         }
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)

@@ -23,7 +23,7 @@ namespace Shop
             dict.Add("orderid", order.Id.ToString());
 
 
-            component.WithButton<CancelOrder>(dict);
+            
 
             if (!order.IsRecived)
             {
@@ -42,7 +42,7 @@ namespace Shop
                 component.WithButton<OrderIsTransacted>(dict);
                 
             }
-
+            component.WithButton<CancelOrder>(dict);
             return component.Build();
         }
 

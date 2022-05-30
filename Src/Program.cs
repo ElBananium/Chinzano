@@ -26,6 +26,8 @@ var menuservice = new MenuService();
 var configuration = new ConfigurationBuilder().AddJsonFile("botconfig.json").Build();
 
 
+
+
 var repo = new RAMGenericRepository("repositories.json");
 repo.AddNewRepository("materials", "Маты");
 repo.AddNewRepository("marijusig", "Косяки");
@@ -48,8 +50,6 @@ var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLL
     .UseMenuHandler(menuservice);
 
 
-
-
 var ordermiddleware = new OrderShopHandler(ordersession, repo, bot.Client);
 
 bot.Client.MessageReceived += ordermiddleware.HandleMessage;
@@ -67,9 +67,7 @@ var provider = new ServiceCollection()
 
     .BuildServiceProvider();
 
-
 bot.AddServiceProvider(provider);
-
 
 List<Assembly> assemblys = new List<Assembly>();
 

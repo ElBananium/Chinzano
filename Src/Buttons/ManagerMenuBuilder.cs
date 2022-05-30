@@ -43,7 +43,7 @@ namespace Src.Buttons
 
 
             await createdchannel.AddPermissionOverwriteAsync(Guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Deny));
-            await createdchannel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Allow));
+            await createdchannel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Allow, sendMessages: PermValue.Deny));
             
 
 

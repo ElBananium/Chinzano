@@ -22,22 +22,23 @@ namespace Shop
         private IOrderSessionRepository _ordersessionrepository;
         private DiscordSocketClient _client;
 
-        public async Task HandleMessage(SocketMessage arg)
+        public Task HandleMessage(SocketMessage arg)
         {
             var ordersession = _ordersessionrepository.GetSession(arg.Channel.Id);
-            if (ordersession == null || arg.Author.IsBot) return;
+            if (ordersession == null || arg.Author.IsBot) return Task.CompletedTask;
 
             switch (ordersession.State)
             {
                 case OrderSessionState.HowManyNeed:
-                    await HandleHowManyNeed(arg, ordersession);
+                    HandleHowManyNeed(arg, ordersession);
                     break;
                 case OrderSessionState.GetCurrentTime:
 
-                    await HandleCurrentTime(arg, ordersession);
+                    HandleCurrentTime(arg, ordersession);
                     break;
 
             }
+            return Task.CompletedTask;
         }
 
         public async Task HandleHowManyNeed(SocketMessage arg, OrderSession session)

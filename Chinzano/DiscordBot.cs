@@ -37,27 +37,32 @@ namespace Middleware
 
         }
 
-        private async Task HandleCommandAsync(SocketMessage arg)
+        private Task HandleCommandAsync(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
-            if (message == null) return;
+            if (message == null) return Task.CompletedTask;
 
 
-            if (!message.HasStringPrefix(StringPrefix, ref ArgPos) || message.Author.IsBot) return;
+            if (!message.HasStringPrefix(StringPrefix, ref ArgPos) || message.Author.IsBot) return Task.CompletedTask;
 
             var context = new SocketCommandContext(Client, message);
 
-           await Commands.ExecuteAsync(
+            
+
+            Task.Run(() => Commands.ExecuteAsync(
                 context
                 , argPos: ArgPos
-                , services: ServiceProvider);
-                
+                , services: ServiceProvider) );
+            return Task.CompletedTask;
 
         }
 
-        private async Task HandleButtonAsync(SocketMessageComponent arg)
+        private Task HandleButtonAsync(SocketMessageComponent arg)
         {
-            await Buttons.ExecuteComponentAsync(arg);
+
+            Task.Run(() => Buttons.ExecuteComponentAsync(arg));
+
+            return Task.CompletedTask;
         }
 
 
@@ -116,14 +121,24 @@ namespace Middleware
             return Task.CompletedTask;
         }
 
-        private async Task HandleMenuAsync(SocketMessageComponent arg)
+        private Task HandleMenuAsync(SocketMessageComponent arg)
         {
-            await Menu.ExecuteComponentAsync(arg);
+            
+             Task.Run(() => Menu.ExecuteComponentAsync(arg));
+
+            return Task.CompletedTask;
         }
 
-        private async Task HandleModalAsync(SocketModal arg)
+        private Task HandleModalAsync(SocketModal arg)
         {
-            await Modals.ExecuteComponentAsync(arg);
+
+            
+
+            Task.Run(() => {
+                Modals.ExecuteComponentAsync(arg);
+                });
+
+            return Task.CompletedTask;
         }
 
         public async Task StartAsync(string token)

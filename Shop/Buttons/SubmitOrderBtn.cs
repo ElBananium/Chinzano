@@ -96,7 +96,7 @@ namespace Shop.Buttons
             await channelwithorder.Channel.SendMessageAsync("Скоро вам напишет менеджер по продажам, с ним вы сможете обсудить детали");
             await (channelwithorder.Channel as SocketGuildChannel).AddPermissionOverwriteAsync(channelwithorder.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
 
-
+            await (channelwithorder.Channel as SocketGuildChannel).ModifyAsync(x => x.Name = "Заказ номер " + order.Id);
 
 
 
