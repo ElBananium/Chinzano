@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Shop.Buttons;
 using Shop.Services;
 using Shop.Services.OrderSessionRepository;
 using System;
@@ -16,12 +18,8 @@ namespace Shop.Menus
     public class OrderMenu : MenuBase
     {
         private IShopGenericRepository _shopRepo;
-
-        private DiscordSocketClient _client;
-
         private IConfiguration _config;
         private IOrderSessionRepository _orderSessionService;
-        private ButtonService _btnservice;
 
         public override string PlaceHolder => null;
 
@@ -44,7 +42,7 @@ namespace Shop.Menus
         public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             await modal.DeferAsync();
-            var guild = _client.GetGuild(ulong.Parse(_config["currentguildid"]));
+            var guild = Client.GetGuild(ulong.Parse(_config["currentguildid"]));
 
             var category = guild.GetTextChannel(modal.Channel.Id).Category;
 
@@ -56,20 +54,18 @@ namespace Shop.Menus
 
             _orderSessionService.AddNewSession(modal.User.Id, channel.Id, modal.Data.Values.First());
 
-            var components = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
+            var components = new AdditionalComponentBuilder().WithButton<CloseOrderButton>();
 
             await channel.SendMessageAsync("Сколько вам нужно?", components: components.Build());
 
 
         }
 
-        public OrderMenu(IShopGenericRepository shopRepo, DiscordSocketClient client, IConfiguration config, IOrderSessionRepository sessionservice, ButtonService btnservice)
+        public OrderMenu(IShopGenericRepository shopRepo,IConfiguration config, IOrderSessionRepository sessionservice)
         {
             _shopRepo = shopRepo;
-            _client = client;
             _config = config;
             _orderSessionService = sessionservice;
-            _btnservice = btnservice;
         }
 
     }

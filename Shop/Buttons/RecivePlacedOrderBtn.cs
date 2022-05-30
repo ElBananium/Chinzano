@@ -16,7 +16,6 @@ namespace Shop.Buttons
     {
         private IPlacedOrderRepository _placedOrderRepository;
         private IGenericRepository _genericRepository;
-        private ButtonService _buttonService;
         private IOrderStateLogger _orderStateLogger;
 
         public override ButtonBuilder GetComponent()
@@ -54,12 +53,12 @@ namespace Shop.Buttons
             await _orderStateLogger.OrderRecivedFromManager((arg.User as SocketGuildUser).DisplayName, placedorder.Id, trrepo.PublicName, placedorder.HowManyOrdered);
 
             var embed = PlacedOrderMessageBuilder.GetEmbed(placedorder, _genericRepository);
-            var components = PlacedOrderMessageBuilder.GetComponent(placedorder, _buttonService);
+            var components = PlacedOrderMessageBuilder.GetComponent(placedorder);
             await arg.DeferAsync();
             await arg.Message.ModifyAsync(x =>
             {
                 x.Embed = embed.Build();
-                x.Components = components.Build();
+                x.Components = components;
 
             });
 
@@ -69,11 +68,10 @@ namespace Shop.Buttons
 
         }
 
-        public RecivePlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, ButtonService buttonService, IOrderStateLogger orderStateLogger)
+        public RecivePlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IOrderStateLogger orderStateLogger)
         {
             _placedOrderRepository = placedOrderRepository;
             _genericRepository = genericRepository;
-            _buttonService = buttonService;
             _orderStateLogger = orderStateLogger;
         }
     }

@@ -16,7 +16,7 @@ namespace Middleware.Menu
     {
         public override async Task ExecuteComponentAsync(SocketMessageComponent arg)
         {
-            var btn = _addedComponentsTypes[arg.Data.CustomId.Split("_")[1]];
+            var btn = _addedComponentsTypes.FirstOrDefault( x=> x.Name == arg.Data.CustomId.Split("_")[1]);
             if (btn == null) return;
 
 
@@ -33,11 +33,10 @@ namespace Middleware.Menu
         }
 
 
-        public override SelectMenuBuilder GetComponentByName(string name, Dictionary<string, string> adinfo = null)
+        public override SelectMenuBuilder GetComponentByName<T>(Dictionary<string, string> adinfo = null)
         {
-            var modalbuilder = _addedComponentsTypes.Values.First(x => x.Name == name);
 
-            var modadd = CreateComponent(modalbuilder, adinfo, Client, null);
+            var modadd = CreateComponent(typeof(T), adinfo, Client, null);
 
 
             var modal = new SelectMenuBuilder() { CustomId = modadd.CustomId, Placeholder = modadd.PlaceHolder, MinValues = modadd.MinValue, MaxValues = modadd.MaxValue }.WithOptions(modadd.GetComponent().ToList());

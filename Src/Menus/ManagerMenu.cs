@@ -1,8 +1,10 @@
 ﻿using Data.TradeRepository;
 using Discord;
 using Discord.WebSocket;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Src.Buttons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,6 @@ namespace Src.Menus
     public class ManagerMenu : MenuBase
     {
         private IGenericRepository _repo;
-        private ButtonService _btnservice;
 
         public override string PlaceHolder => null;
 
@@ -45,11 +46,11 @@ namespace Src.Menus
 
             embed.AddField("На складе", repository.Count.ToString());
 
-            var components = new ComponentBuilder();
+            var components = new AdditionalComponentBuilder();
             var adinfo = new Dictionary<string, string>() { { "repname", info } };
-            components.WithButton(_btnservice.GetComponentByName("ManagerDepositBtn", adinfo));
-            components.WithButton(_btnservice.GetComponentByName("ManagerWidthdrawBtn", adinfo));
-            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
+            components.WithButton<ManagerDepositBtn>(adinfo);
+            components.WithButton<ManagerWidthdrawBtn>(adinfo);
+            components.WithButton<DeleteThisMsgBtn>();
 
 
             await modal.DeferAsync();
@@ -62,10 +63,9 @@ namespace Src.Menus
 
             await modal.Channel.SendMessageAsync("", false, embed.Build(), components: components.Build());
         }
-        public ManagerMenu(IGenericRepository repo, ButtonService btnservice)
+        public ManagerMenu(IGenericRepository repo)
         {
             _repo = repo;
-            _btnservice = btnservice;
         }
     }
 }

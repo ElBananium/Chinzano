@@ -1,6 +1,8 @@
 ﻿using Data.TradeRepository;
 using Discord;
+using Middleware;
 using Middleware.Buttons;
+using Shop.Buttons;
 using Shop.Services.PlacedOrderRepository;
 using System;
 using System.Collections.Generic;
@@ -12,34 +14,36 @@ namespace Shop
 {
     public static class PlacedOrderMessageBuilder
     {
-        public  static ComponentBuilder GetComponent(PlacedOrder order, ButtonService buttonService)
+        public  static MessageComponent GetComponent(PlacedOrder order)
         {
-            var component = new ComponentBuilder();
+            var component = new AdditionalComponentBuilder();
+            
+            
             var dict = new Dictionary<string, string>();
             dict.Add("orderid", order.Id.ToString());
-            ButtonBuilder btn = null;
-            component.WithButton(buttonService.GetComponentByName("CancelOrder", dict));
+
+
+            component.WithButton<CancelOrder>(dict);
 
             if (!order.IsRecived)
             {
-                
-                btn = buttonService.GetComponentByName("RecivePlacedOrderBtn", dict);
+
+                component.WithButton<RecivePlacedOrderBtn>(dict);
                 
             }
 
             if(order.IsRecived && !order.IsPicked)
             {
-                btn = buttonService.GetComponentByName("PickPlacedOrderBtn", dict);
+                component.WithButton<PickPlacedOrderBtn>(dict);
                 
             }
             if (order.IsPicked)
             {
-                btn = buttonService.GetComponentByName("OrderIsTransacted", dict);
+                component.WithButton<OrderIsTransacted>(dict);
                 
             }
-            if(btn != null) component.WithButton(btn);
 
-            return component;
+            return component.Build();
         }
 
 

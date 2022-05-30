@@ -15,11 +15,10 @@ namespace Middleware.Buttons
     public class ButtonService : ComponentService<ButtonBuilder, SocketMessageComponent, ButtonBase, ButtonBuilder>
     {
 
-        public override ButtonBuilder GetComponentByName(string name, Dictionary<string, string> adinfo = null)
+        public override ButtonBuilder GetComponentByName<T>(Dictionary<string, string> adinfo = null)
         {
-            var btntype = _addedComponentsTypes.Values.First(x => x.Name == name);
 
-            var btn = CreateComponent(btntype, adinfo, Client, null);
+            var btn = CreateComponent(typeof(T), adinfo, Client, null);
             
             
 
@@ -31,7 +30,7 @@ namespace Middleware.Buttons
 
         public override async Task ExecuteComponentAsync(SocketMessageComponent arg)
         {
-            var btn = _addedComponentsTypes[arg.Data.CustomId.Split("_")[1]];
+            var btn = _addedComponentsTypes.FirstOrDefault(x => x.Name == arg.Data.CustomId.Split("_")[1]);
             if (btn == null) return;
 
             var infostring = arg.Data.CustomId.Split("_")[2];

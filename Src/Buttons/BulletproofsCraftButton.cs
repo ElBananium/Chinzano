@@ -2,8 +2,10 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Modals;
+using Src.Modals;
 using Src.Services.CraftingService;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,6 @@ namespace Src.Buttons
     {
 
 
-        private ModalService _modals;
 
         public override ButtonBuilder GetComponent()
         {
@@ -29,15 +30,9 @@ namespace Src.Buttons
            
 
 
-            await arg.RespondWithModalAsync(_modals.GetComponentByName("BulletproofsCraftModal", null).Build());
+            await arg.RespondWithModalAsync(AdditionalComponentBuilder.GetModal<BulletproofsCraftModal>().Build());
 
         }
 
-        public BulletproofsCraftButton(ModalService modals )
-        {
-            
-
-            _modals = modals;
-        }
     }
 }

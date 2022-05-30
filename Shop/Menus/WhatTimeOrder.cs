@@ -2,8 +2,10 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Shop.Buttons;
 using Shop.Services.OrderSessionRepository;
 using System;
 using System.Collections.Generic;
@@ -17,9 +19,7 @@ namespace Shop.Menus
     {
         private IOrderSessionRepository _orderSessionRepo;
         private IGenericRepository _genericRepository;
-        private DiscordSocketClient _client;
         private IConfiguration _config;
-        private ButtonService _btnservice;
 
         public override string PlaceHolder => "Выберите";
 
@@ -75,9 +75,9 @@ namespace Shop.Menus
 
             if (session.IsNowDelivery) embedbuilder.AddField($"Ко времени", "Сейчас");
 
-            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
+            var compbuilder = new AdditionalComponentBuilder().WithButton<SubmitOrderBtn>().WithButton< CloseOrderButton>();
 
-            await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(channel.Id).SendMessageAsync(embed: embedbuilder.Build(), components: compbuilder.Build());
+            await Client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(channel.Id).SendMessageAsync(embed: embedbuilder.Build(), components: compbuilder.Build());
             
 
 
@@ -90,13 +90,11 @@ namespace Shop.Menus
             await channel.SendMessageAsync("К какому времени? Укажите в формате : 14:00, по московскому времени");
         }
 
-        public WhatTimeOrder(IOrderSessionRepository orderrepo, IGenericRepository genericRepository, DiscordSocketClient client, IConfiguration config, ButtonService btnservice)
+        public WhatTimeOrder(IOrderSessionRepository orderrepo, IGenericRepository genericRepository, IConfiguration config)
         {
             _orderSessionRepo = orderrepo;
             _genericRepository = genericRepository;
-            _client = client;
             _config = config;
-            _btnservice = btnservice;
         }
     }
 }

@@ -18,9 +18,7 @@ namespace Shop.Buttons
     {
         private IOrderSessionRepository _orderSession;
         private IGenericRepository _genericRepository;
-        private ButtonService _buttonService;
         private IConfiguration _config;
-        private DiscordSocketClient _client;
         private IPlacedOrderRepository _placedOrderRepository;
         private IOrderStateLogger _orderStateLogger;
 
@@ -72,7 +70,7 @@ namespace Shop.Buttons
         private async Task NotifyOrder(OrderSession session, bool IsToTrade, SocketMessageComponent channelwithorder)
         {
             //_config["notifyformanagerchannelid"]
-            var channel = _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(ulong.Parse(_config["notifyformanagerchannelid"]));
+            var channel = Guild.GetTextChannel(ulong.Parse(_config["notifyformanagerchannelid"]));
 
             string timetodelivery = null;
             if (session.IsNowDelivery) timetodelivery = "Сейчас";
@@ -89,11 +87,11 @@ namespace Shop.Buttons
 
             var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository);
 
-            var components = PlacedOrderMessageBuilder.GetComponent(order, _buttonService);
+            var components = PlacedOrderMessageBuilder.GetComponent(order);
 
 
             if (IsToTrade) await _orderStateLogger.OrderRecivedFromSystem(order.Id, _genericRepository.GetRepositoryByName(session.TradeRepoName).PublicName.Split("|")[0], (int)session.HowManyNeed);
-            await channel.SendMessageAsync(embed: embed.Build(), components: components.Build());
+            await channel.SendMessageAsync(embed: embed.Build(), components: components);
 
             await channelwithorder.Channel.SendMessageAsync("Скоро вам напишет менеджер по продажам, с ним вы сможете обсудить детали");
             await (channelwithorder.Channel as SocketGuildChannel).AddPermissionOverwriteAsync(channelwithorder.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
@@ -108,13 +106,11 @@ namespace Shop.Buttons
 
 
 
-        public SubmitOrderBtn(IOrderSessionRepository orderSession, IGenericRepository genericRepository, ButtonService buttonService, IConfiguration config, DiscordSocketClient client, IPlacedOrderRepository placedOrderRepository, IOrderStateLogger orderStateLogger)
+        public SubmitOrderBtn(IOrderSessionRepository orderSession, IGenericRepository genericRepository, IConfiguration config, IPlacedOrderRepository placedOrderRepository, IOrderStateLogger orderStateLogger)
         {
             _orderSession = orderSession;
             _genericRepository = genericRepository;
-            _buttonService = buttonService;
             _config = config;
-            _client = client;
             _placedOrderRepository = placedOrderRepository;
             _orderStateLogger = orderStateLogger;
         }

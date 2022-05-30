@@ -2,8 +2,10 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Menu;
 using Middleware.Modals;
+using Shop.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,6 @@ namespace Src.Modals
     {
         private IGenericRepository _repo;
         private IConfiguration _config;
-        private MenuService _menuService;
 
         public override string Title => "Если вы не хотите менять, укажите -1";
 
@@ -73,9 +74,9 @@ namespace Src.Modals
 
                 await msgs.First().DeleteAsync();
 
-                var compbuilder = new ComponentBuilder();
+                var compbuilder = new AdditionalComponentBuilder();
 
-                compbuilder.WithSelectMenu(_menuService.GetComponentByName("OrderMenu"));
+                compbuilder.WithSelectMenu<OrderMenu>();
 
                 await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
 
@@ -93,11 +94,10 @@ namespace Src.Modals
 
         }
 
-        public OwnerEditModal(IGenericRepository repo, IConfiguration config, Middleware.Menu.MenuService menuService)
+        public OwnerEditModal(IGenericRepository repo, IConfiguration config)
         {
             _repo = repo;
             _config = config;
-            _menuService = menuService;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.Commands;
+using Middleware;
 using Middleware.Menu;
+using Shop.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,6 @@ namespace Shop.Commands
 {
     public class ShopModule : ModuleBase<SocketCommandContext>
     {
-        private MenuService _menuService;
         
 
         [Command("CreateShopCategory")]
@@ -23,9 +24,9 @@ namespace Shop.Commands
 
             var channel = await Context.Guild.CreateTextChannelAsync("Заказать", x => x.CategoryId = category.Id);
             await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new(sendMessages: PermValue.Deny));
-            var compbuilder = new ComponentBuilder();
+            var compbuilder = new AdditionalComponentBuilder();
 
-            compbuilder.WithSelectMenu(_menuService.GetComponentByName("OrderMenu"));
+            compbuilder.WithSelectMenu<OrderMenu>();
 
             await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
 
@@ -36,10 +37,7 @@ namespace Shop.Commands
         }
 
 
-        public ShopModule(MenuService menuService)
-        {
-            _menuService = menuService;
-        }
+
 
     }
 }

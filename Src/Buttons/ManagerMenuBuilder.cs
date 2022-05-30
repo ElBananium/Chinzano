@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Src.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,6 @@ namespace Src.Buttons
 {
     public class ManagerMenuBuilderBtn : ButtonBase
     {
-        private MenuService _menuService;
 
         private DiscordSocketClient _client;
 
@@ -28,27 +29,25 @@ namespace Src.Buttons
         {
             await arg.DeferAsync();
 
-            var guild = _client.GetGuild(ulong.Parse(_config["currentguildid"]));
 
-            var channel = guild.GetTextChannel((ulong)arg.ChannelId);
+            var channel = arg.Channel as SocketTextChannel;
 
             await channel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Deny));
 
 
 
-            var createdchannel = await guild.CreateTextChannelAsync($"Панель менеджера", x => {
+            var createdchannel = await Guild.CreateTextChannelAsync($"Панель менеджера", x => {
                 x.CategoryId = channel.CategoryId;
                 });
 
 
 
-            await createdchannel.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Deny));
+            await createdchannel.AddPermissionOverwriteAsync(Guild.EveryoneRole, new OverwritePermissions(viewChannel: PermValue.Deny));
             await createdchannel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Allow));
             
 
 
-            var compbuilder = new ComponentBuilder();
-            compbuilder.WithSelectMenu(_menuService.GetComponentByName("ManagerMenu"));
+            var compbuilder = new AdditionalComponentBuilder().WithSelectMenu<ManagerMenu>();
             await createdchannel.SendMessageAsync("Выберите тип", components: compbuilder.Build());
 
             
@@ -57,9 +56,8 @@ namespace Src.Buttons
            
         }
 
-        public ManagerMenuBuilderBtn(MenuService menuservice, DiscordSocketClient client, IConfiguration config)
+        public ManagerMenuBuilderBtn(DiscordSocketClient client, IConfiguration config)
         {
-            _menuService = menuservice;
             _client = client;
             _config = config;
         }

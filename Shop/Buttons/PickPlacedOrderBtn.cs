@@ -17,8 +17,6 @@ namespace Shop.Buttons
     {
         private IPlacedOrderRepository _placedOrderRepository;
         private IGenericRepository _genericRepository;
-        private ButtonService _buttonService;
-        private DiscordSocketClient _client;
         private IConfiguration _config;
         private IOrderStateLogger _orderStateLogger;
 
@@ -40,15 +38,15 @@ namespace Shop.Buttons
 
 
             var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository);
-            var components = PlacedOrderMessageBuilder.GetComponent(order, _buttonService);
+            var components = PlacedOrderMessageBuilder.GetComponent(order);
 
             await _orderStateLogger.OrderPicked(orderid, order.WhosPickedNickname);
-            await _client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(order.ChannelId).AddPermissionOverwriteAsync(arg.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
+            await Guild.GetTextChannel(order.ChannelId).AddPermissionOverwriteAsync(arg.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
             await arg.DeferAsync();
             await arg.Message.ModifyAsync(x =>
             {
                 x.Embed = embed.Build();
-                x.Components = components.Build();
+                x.Components = components;
 
             });
 
@@ -57,12 +55,10 @@ namespace Shop.Buttons
 
         }
 
-        public PickPlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, ButtonService buttonService, DiscordSocketClient client, IConfiguration config, IOrderStateLogger orderStateLogger)
+        public PickPlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IConfiguration config, IOrderStateLogger orderStateLogger)
         {
             _placedOrderRepository = placedOrderRepository;
             _genericRepository = genericRepository;
-            _buttonService = buttonService;
-            _client = client;
             _config = config;
             _orderStateLogger = orderStateLogger;
         }

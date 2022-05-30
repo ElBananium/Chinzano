@@ -1,8 +1,10 @@
 ﻿using Data.TradeRepository;
 using Discord;
 using Discord.WebSocket;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Modals;
+using Src.Modals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,7 @@ namespace Src.Buttons
 {
     public class ManagerWidthdrawBtn : ButtonBase
     {
-        private IGenericRepository _repo;
 
-        private ModalService _modalService;
 
         public override ButtonBuilder GetComponent()
         {
@@ -24,16 +24,11 @@ namespace Src.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            var modal = _modalService.GetComponentByName("ManagerWidthDrawModal", AdditionalInfo);
+            var modal = AdditionalComponentBuilder.GetModal<ManagerWidthDrawModal>(AdditionalInfo);
 
             await arg.RespondWithModalAsync(modal.Build());
         }
 
-        public ManagerWidthdrawBtn(IGenericRepository repo, ModalService modalService)
-        {
-            _repo = repo;
 
-            _modalService = modalService;
-        }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Data.TradeRepository;
 using Discord;
 using Discord.WebSocket;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Src.Buttons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +18,6 @@ namespace Src.Menus
         public override string PlaceHolder => null;
 
         private IGenericRepository _repo;
-        private ButtonService _btnservice;
-        private MenuService _menuService;
 
         public override int MinValue => 1;
 
@@ -51,11 +51,7 @@ namespace Src.Menus
             var info = modal.Data.Values.First();
           
                 var repository = _repo.GetRepositoryByName(info);
-                if(repository == null)
-            {
-                await AdditionalMenuOwnerHandler(info, modal);
-                return;
-            }
+            if (repository == null) return;
 
                 var embed = new EmbedBuilder() { Color = new Color(187, 27, 78), Title = repository.PublicName };
 
@@ -64,10 +60,10 @@ namespace Src.Menus
                 embed.AddField("Цена в магазине", repository.PricePerItem.ToString());
 
 
-                var components = new ComponentBuilder();
+                var components = new AdditionalComponentBuilder();
                 var adinfo = new Dictionary<string, string>() { { "repname", info } };
-                components.WithButton(_btnservice.GetComponentByName("OwnerEditBtn", adinfo));
-            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
+                components.WithButton<OwnerEditBtn>(adinfo);
+            components.WithButton<DeleteThisMsgBtn>();
 
 
             
@@ -77,30 +73,11 @@ namespace Src.Menus
 
         }
 
-        private async Task AdditionalMenuOwnerHandler(string info, SocketMessageComponent modal)
-        {
-            if (info != "pricesetting") return;
 
 
-            var embed = new EmbedBuilder() { Color = new Color(187, 27, 78), Title = "Настройка цен" };
-            foreach(var repo in _repo.GetAllRepositories())
-            {
-                embed.AddField(repo.PublicName, repo.PricePerItem.ToString());
-            }
-            var components = new ComponentBuilder();
-            components.WithSelectMenu(_menuService.GetComponentByName("OwnerEditPriceMenu", null));
-            components.WithButton(_btnservice.GetComponentByName("DeleteThisMsgBtn", null));
-
-
-            await modal.Channel.SendMessageAsync("", false, embed.Build(), components: components.Build());
-
-        }
-
-        public OwnerMenu(IGenericRepository repo, ButtonService btnservice, MenuService menuService)
+        public OwnerMenu(IGenericRepository repo)
         {
             _repo = repo;
-            _btnservice = btnservice;
-            _menuService = menuService;
         }
     }
 }

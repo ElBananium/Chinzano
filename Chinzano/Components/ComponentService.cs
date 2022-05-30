@@ -13,7 +13,7 @@ namespace Middleware.Components
     {
         protected IServiceProvider _serviceProvider;
 
-        protected Dictionary<string, Type> _addedComponentsTypes = new();
+        protected List<Type> _addedComponentsTypes = new();
 
         protected DiscordSocketClient Client;
 
@@ -54,14 +54,14 @@ namespace Middleware.Components
 
             foreach (var btn in buttontypes)
             {
-                var resbtn = CreateComponent(btn, null, null, null);
+                
 
-                _addedComponentsTypes.Add(resbtn.CustomId.Split("_")[1], btn);
+                _addedComponentsTypes.Add(btn);
             }
 
         }
 
-        public abstract TBuildedComponent GetComponentByName(string name, Dictionary<string, string> adinfo = null);
+        public abstract TBuildedComponent GetComponentByName<T>(Dictionary<string, string> adinfo = null) where T : TComponent;
 
         public abstract Task ExecuteComponentAsync(TArgument arg);
 

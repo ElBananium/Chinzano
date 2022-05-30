@@ -16,7 +16,7 @@ namespace Middleware.Modals
     {
         public override async Task ExecuteComponentAsync(SocketModal arg)
         {
-            var btn = _addedComponentsTypes[arg.Data.CustomId.Split("_")[1]];
+            var btn = _addedComponentsTypes.FirstOrDefault(x =>x.Name == arg.Data.CustomId.Split("_")[1]);
             if (btn == null) return;
 
             
@@ -38,11 +38,10 @@ namespace Middleware.Modals
         }
 
 
-        public override ModalBuilder GetComponentByName(string name, Dictionary<string, string> adinfo = null)
+        public override ModalBuilder GetComponentByName<T>(Dictionary<string, string> adinfo = null)
         {
-            var modalbuilder = _addedComponentsTypes.Values.First(x => x.Name == name);
 
-            var modadd = CreateComponent(modalbuilder, adinfo, Client, null);
+            var modadd = CreateComponent(typeof(T), adinfo, Client, null);
             modadd.AdditionalInfo = adinfo;
 
             var modal = new ModalBuilder() { CustomId = modadd.CustomId, Title = modadd.Title, Components = modadd.GetComponent() };

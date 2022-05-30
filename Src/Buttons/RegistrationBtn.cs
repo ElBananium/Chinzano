@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Modals;
+using Src.Modals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,6 @@ namespace Src.Buttons
     public class RegistrationBtn : ButtonBase
     {
 
-        private ModalService _modalService;
         public override ButtonBuilder GetComponent()
         {
             return new ButtonBuilder() { Label = "Сменить никнейм", Style = ButtonStyle.Primary };
@@ -21,13 +22,9 @@ namespace Src.Buttons
 
         public async override Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            var modal = _modalService.GetComponentByName("RegistrationModal", null);
+            var modal = AdditionalComponentBuilder.GetModal<RegistrationModal>();
             await arg.RespondWithModalAsync(modal.Build());
         }
 
-        public RegistrationBtn(ModalService modalservice)
-        {
-            _modalService = modalservice;
-        }
     }
 }

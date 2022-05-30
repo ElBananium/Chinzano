@@ -50,16 +50,13 @@ var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLL
 
 
 
-var ordermiddleware = new OrderShopHandler(ordersession, menuservice, repo, bot.Client, buttonsservice);
+var ordermiddleware = new OrderShopHandler(ordersession, repo, bot.Client);
 
 bot.Client.MessageReceived += ordermiddleware.HandleMessage;
 
 var provider = new ServiceCollection()
     .AddSingleton<IGenericRepository>(repo)
-    .AddSingleton<ButtonService>(buttonsservice)
     .AddSingleton<IConfiguration>(configuration)
-    .AddSingleton<ModalService>(modalservice)
-    .AddSingleton<MenuService>(menuservice)
     .AddSingleton<DiscordSocketClient>(bot.Client)
     .AddSingleton<IShopGenericRepository>(shoprepo)
     .AddTransient<IRepositoryLogger, RepositoryLogger>()
@@ -86,6 +83,10 @@ foreach(var assembly in assemblys)
     menuservice.AddModules(assembly, provider, bot.Client);
     commands.AddModulesAsync(assembly: assembly, provider).GetAwaiter().GetResult();
 }
+
+AdditionalComponentBuilder.MenusService = menuservice;
+AdditionalComponentBuilder.ButtonsService = buttonsservice;
+AdditionalComponentBuilder.ModalsService = modalservice;
 
 
 

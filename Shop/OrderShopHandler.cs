@@ -2,8 +2,11 @@
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Shop.Buttons;
+using Shop.Menus;
 using Shop.Services.OrderSessionRepository;
 using System;
 using System.Collections.Generic;
@@ -16,11 +19,8 @@ namespace Shop
     public class OrderShopHandler
     {
         private IGenericRepository _repo;
-        private MenuService _menuService;
         private IOrderSessionRepository _ordersessionrepository;
         private DiscordSocketClient _client;
-        private ButtonService _btnservice;
-
 
         public async Task HandleMessage(SocketMessage arg)
         {
@@ -60,7 +60,7 @@ namespace Shop
             embed.AddField("Завтра", "Если вы хотите получить ваш товар завтра. Конкретное время вы сможете уточнить позже.");
             embed.AddField("Конкретное время", "Если вы хотите получить ваш товар сегодня, но к конкретному времени");
 
-            var compbuilder = new ComponentBuilder().WithSelectMenu(_menuService.GetComponentByName("WhatTimeOrder"));
+            var compbuilder = new AdditionalComponentBuilder().WithSelectMenu<WhatTimeOrder>();
 
 
 
@@ -112,7 +112,7 @@ namespace Shop
             embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
             embedbuilder.AddField($"Вам доставят сегодня, к ", time);
             
-            var compbuilder = new ComponentBuilder().WithButton(_btnservice.GetComponentByName("SubmitOrderBtn", null)).WithButton(_btnservice.GetComponentByName("CloseOrderButton", null));
+            var compbuilder = new AdditionalComponentBuilder().WithButton<SubmitOrderBtn>().WithButton<CloseOrderButton>();
 
             await channel.SendMessageAsync(embed: embedbuilder.Build(), components: compbuilder.Build());
 
@@ -120,13 +120,11 @@ namespace Shop
 
         }
 
-        public OrderShopHandler(IOrderSessionRepository repos, MenuService menuService, IGenericRepository repo, DiscordSocketClient client, ButtonService btnService)
+        public OrderShopHandler(IOrderSessionRepository repos,IGenericRepository repo, DiscordSocketClient client)
         {
             _repo = repo;
-            _menuService = menuService;
             _ordersessionrepository = repos;
             _client = client;
-            _btnservice = btnService;
         }
 
 

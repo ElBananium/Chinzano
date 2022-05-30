@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Middleware;
 using Middleware.Buttons;
 using Middleware.Modals;
+using Src.Modals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +23,11 @@ namespace Src.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            var modal = _modalService.GetComponentByName("ManagerDepositModal", AdditionalInfo);
+            var modal = AdditionalComponentBuilder.GetModal<ManagerDepositModal>(AdditionalInfo);
 
             await arg.RespondWithModalAsync(modal.Build());
         }
 
-        public ManagerDepositBtn(ModalService modalservice)
-        {
-            _modalService = modalservice;
-        }
+
     }
 }
