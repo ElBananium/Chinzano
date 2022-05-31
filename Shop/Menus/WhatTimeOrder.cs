@@ -7,6 +7,7 @@ using Middleware.Buttons;
 using Middleware.Menu;
 using Shop.Buttons;
 using Shop.Services.OrderSessionRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Shop.Menus
         private IOrderSessionRepository _orderSessionRepo;
         private IGenericRepository _genericRepository;
         private IConfiguration _config;
+        private IShopPriceHandler _shopPriceHandler;
 
         public override string PlaceHolder => "Выберите";
 
@@ -70,7 +72,7 @@ namespace Shop.Menus
             var embedbuilder = new EmbedBuilder() { Color = Color.Teal, Title = "Ваш заказ"};
             embedbuilder.AddField($"Вы заказали", repo.PublicName);
             embedbuilder.AddField($"Количество", session.HowManyNeed);
-            embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
+            embedbuilder.AddField("Цена", _shopPriceHandler.GetPrice(repo, (int)session.HowManyNeed) * session.HowManyNeed);
             if (session.IsTomorrowDelivery) embedbuilder.AddField($"Ко времени", "Завтра");
 
             if (session.IsNowDelivery) embedbuilder.AddField($"Ко времени", "Сейчас");
@@ -90,11 +92,12 @@ namespace Shop.Menus
             await channel.SendMessageAsync("К какому времени? Укажите в формате : 14:00, по московскому времени");
         }
 
-        public WhatTimeOrder(IOrderSessionRepository orderrepo, IGenericRepository genericRepository, IConfiguration config)
+        public WhatTimeOrder(IOrderSessionRepository orderrepo, IGenericRepository genericRepository, IConfiguration config, IShopPriceHandler shopPriceHandler)
         {
             _orderSessionRepo = orderrepo;
             _genericRepository = genericRepository;
             _config = config;
+            _shopPriceHandler = shopPriceHandler;
         }
     }
 }

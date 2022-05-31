@@ -52,7 +52,6 @@ namespace Data.TradeRepositoryInRAM
                 repotoadd.Deposit(repo.Count + repo.ToTradeCount);
 
                 repotoadd.ToTrade(repo.ToTradeCount);
-                repotoadd.SetPricePerIten(repo.PricePerItem);
             }
         }
 

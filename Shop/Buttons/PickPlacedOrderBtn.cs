@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Middleware.Buttons;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Shop.Buttons
         private IGenericRepository _genericRepository;
         private IConfiguration _config;
         private IOrderStateLogger _orderStateLogger;
+        private IShopPriceHandler _shopPriceHandler;
 
         public override ButtonBuilder GetComponent()
         {
@@ -37,7 +39,7 @@ namespace Shop.Buttons
 
 
 
-            var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository);
+            var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository, _shopPriceHandler);
             var components = PlacedOrderMessageBuilder.GetComponent(order);
 
             await _orderStateLogger.OrderPicked(orderid, order.WhosPickedNickname);
@@ -55,12 +57,13 @@ namespace Shop.Buttons
 
         }
 
-        public PickPlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IConfiguration config, IOrderStateLogger orderStateLogger)
+        public PickPlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IConfiguration config, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler)
         {
             _placedOrderRepository = placedOrderRepository;
             _genericRepository = genericRepository;
             _config = config;
             _orderStateLogger = orderStateLogger;
+            _shopPriceHandler = shopPriceHandler;
         }
     }
 }

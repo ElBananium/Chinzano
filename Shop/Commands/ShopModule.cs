@@ -1,8 +1,11 @@
-﻿using Discord;
+﻿using Data.ShopPriceFiltersRepository;
+using Data.TradeRepository;
+using Discord;
 using Discord.Commands;
 using Middleware;
 using Middleware.Menu;
 using Shop.Menus;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +16,9 @@ namespace Shop.Commands
 {
     public class ShopModule : ModuleBase<SocketCommandContext>
     {
-        
+        private IShopPriceFiltersRepository _filtersrepo;
+        private IGenericRepository _repos;
+        private IShopPriceHandler _pricehandler;
 
         [Command("CreateShopCategory")]
         public async Task CreateShopCategory()
@@ -22,7 +27,22 @@ namespace Shop.Commands
 
             var category = await Context.Guild.CreateCategoryChannelAsync("Магазин");
 
-            var channel = await Context.Guild.CreateTextChannelAsync("Заказать", x => x.CategoryId = category.Id);
+            var channel = await Context.Guild.CreateTextChannelAsync("Прайс-лист", x => x.CategoryId = category.Id);
+            await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Deny));
+
+            var embeds = PriceListEmbedsBuilder.GetEmbeds(_filtersrepo, _repos.GetAllRepositories());
+
+            foreach(var embed in embeds)
+            {
+                await channel.SendMessageAsync(embed: embed.Build());
+            }
+            
+            using (StreamWriter sw = new("pricelistchannelid.txt"))
+            {
+                sw.Write(channel.Id);
+            }
+
+            channel = await Context.Guild.CreateTextChannelAsync("Заказать", x => x.CategoryId = category.Id);
             await channel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, new(sendMessages: PermValue.Deny));
             var compbuilder = new AdditionalComponentBuilder();
 
@@ -34,6 +54,15 @@ namespace Shop.Commands
             {
                 sw.Write(channel.Id);
             }
+
+            
+        }
+
+        public ShopModule(IShopPriceFiltersRepository filtersrepo, IGenericRepository repos, IShopPriceHandler pricehandler)
+        {
+            _filtersrepo = filtersrepo;
+            _repos = repos;
+            _pricehandler = pricehandler;
         }
 
 

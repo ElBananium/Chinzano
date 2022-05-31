@@ -34,7 +34,7 @@ namespace Shop.Menus
 
             foreach(var repo in _shopRepo.GetAllRepositories())
             {
-                opt.Add(new SelectMenuOptionBuilder(repo.PublicName+" | Цена за штуку "+repo.PricePerItem, repo.Name, isDefault: false));
+                opt.Add(new SelectMenuOptionBuilder(repo.PublicName, repo.Name, isDefault: false));
             }
             return opt.ToArray();
         }

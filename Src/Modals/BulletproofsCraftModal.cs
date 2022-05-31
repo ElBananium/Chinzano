@@ -48,6 +48,8 @@ namespace Src.Modals
                 await modal.DeferAsync();
                 if (!crafting.CanYouCraft(count))
                 {
+                var embed = new EmbedBuilder() { Title = "Ошибка | На складе недостаточно материалов", Color = Color.Red };
+                await modal.User.SendMessageAsync(embed: embed.Build());
                     return;
                 }
 

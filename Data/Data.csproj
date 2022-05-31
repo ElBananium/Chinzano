@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Chinzano\Middleware.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MoneyStorage\" />
+  </ItemGroup>
+
 </Project>

@@ -27,13 +27,6 @@ namespace Data.TradeRepositoryInRAM
             
         }
 
-        public override void SetPricePerIten(uint price)
-        {
-            lock (CountLock)
-            {
-                PricePerItem = price;
-            }
-        }
 
         public override void ToTrade(long count)
         {

@@ -8,6 +8,7 @@ using Middleware.Buttons;
 using Middleware.Menu;
 using Middleware.Modals;
 using Newtonsoft.Json;
+using Shop.Menus;
 using Src.Buttons;
 using Src.Menus;
 using System;
@@ -99,6 +100,11 @@ namespace Src.Commands
             var compbuilder = new AdditionalComponentBuilder().WithSelectMenu<OwnerMenu>();
 
             await channel.SendMessageAsync("Выберите тип", components: compbuilder.Build());
+
+            var pricefilterchannel = await Context.Guild.CreateTextChannelAsync("Цены", x => x.CategoryId = category.Id);
+            compbuilder = new AdditionalComponentBuilder().WithSelectMenu<PriceShopRepoMenu>();
+
+            await pricefilterchannel.SendMessageAsync("Редактировать цены", components: compbuilder.Build());
 
 
             var logchannel = await Context.Guild.CreateTextChannelAsync("Логи", x => x.CategoryId = category.Id);

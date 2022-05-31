@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Middleware;
 using Middleware.Buttons;
 using Middleware.Menu;
+using Shop.Buttons;
 using Src.Buttons;
 using System;
 using System.Collections.Generic;

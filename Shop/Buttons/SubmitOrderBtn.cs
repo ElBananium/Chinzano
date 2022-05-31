@@ -6,6 +6,7 @@ using Middleware.Buttons;
 using Shop.Services.OrderSessionRepository;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Shop.Buttons
         private IConfiguration _config;
         private IPlacedOrderRepository _placedOrderRepository;
         private IOrderStateLogger _orderStateLogger;
+        private IShopPriceHandler _shopPriceHandler;
 
         public override ButtonBuilder GetComponent()
         {
@@ -85,7 +87,7 @@ namespace Shop.Buttons
 
             var order = _placedOrderRepository.CreateOrder(session.TradeRepoName, (int)session.HowManyNeed, timetodelivery, IsToTrade, session.ChannelId);
 
-            var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository);
+            var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository, _shopPriceHandler);
 
             var components = PlacedOrderMessageBuilder.GetComponent(order);
 
@@ -106,13 +108,14 @@ namespace Shop.Buttons
 
 
 
-        public SubmitOrderBtn(IOrderSessionRepository orderSession, IGenericRepository genericRepository, IConfiguration config, IPlacedOrderRepository placedOrderRepository, IOrderStateLogger orderStateLogger)
+        public SubmitOrderBtn(IOrderSessionRepository orderSession, IGenericRepository genericRepository, IConfiguration config, IPlacedOrderRepository placedOrderRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler)
         {
             _orderSession = orderSession;
             _genericRepository = genericRepository;
             _config = config;
             _placedOrderRepository = placedOrderRepository;
             _orderStateLogger = orderStateLogger;
+            _shopPriceHandler = shopPriceHandler;
         }
     }
 }

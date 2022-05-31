@@ -4,6 +4,7 @@ using Middleware;
 using Middleware.Buttons;
 using Shop.Buttons;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,13 +48,13 @@ namespace Shop
         }
 
 
-        public static EmbedBuilder GetEmbed(PlacedOrder order, IGenericRepository genericRepository)
+        public static EmbedBuilder GetEmbed(PlacedOrder order, IGenericRepository genericRepository, IShopPriceHandler shopPriceHandler)
         {
             var repo = genericRepository.GetRepositoryByName(order.TradeRepoName);
             var embed = new EmbedBuilder() { Title = "Заказ#" + order.Id, Color = Color.Magenta };
             embed.AddField("Что заказано?", repo.PublicName);
             embed.AddField("Сколько заказано?", order.HowManyOrdered);
-            embed.AddField("К оплате", order.HowManyOrdered * repo.PricePerItem);
+            embed.AddField("К оплате", shopPriceHandler.GetPrice(repo, order.HowManyOrdered) * order.HowManyOrdered);
             embed.AddField("Когда доставить?", order.WhatTime);
 
             embed.AddField("Статус товара", order.IsRecived ? "Зарезервирован" : "Не зарезервирован");

@@ -8,6 +8,7 @@ using Middleware.Menu;
 using Shop.Buttons;
 using Shop.Menus;
 using Shop.Services.OrderSessionRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Shop
         private IGenericRepository _repo;
         private IOrderSessionRepository _ordersessionrepository;
         private DiscordSocketClient _client;
+        private IShopPriceHandler _shopPriceHAndler;
 
         public Task HandleMessage(SocketMessage arg)
         {
@@ -110,7 +112,7 @@ namespace Shop
             var embedbuilder = new EmbedBuilder() { Color = Color.Teal, Title = "Ваш заказ" };
             embedbuilder.AddField($"Вы заказали", repo.PublicName);
             embedbuilder.AddField($"Количество", session.HowManyNeed);
-            embedbuilder.AddField("Цена", repo.PricePerItem * session.HowManyNeed);
+            embedbuilder.AddField("Цена", session.HowManyNeed * _shopPriceHAndler.GetPrice(repo, (int)session.HowManyNeed));
             embedbuilder.AddField($"Вам доставят сегодня, к ", time);
             
             var compbuilder = new AdditionalComponentBuilder().WithButton<SubmitOrderBtn>().WithButton<CloseOrderButton>();
@@ -121,11 +123,12 @@ namespace Shop
 
         }
 
-        public OrderShopHandler(IOrderSessionRepository repos,IGenericRepository repo, DiscordSocketClient client)
+        public OrderShopHandler(IOrderSessionRepository repos,IGenericRepository repo, DiscordSocketClient client, IShopPriceHandler shopPriceHandler)
         {
             _repo = repo;
             _ordersessionrepository = repos;
             _client = client;
+            _shopPriceHAndler = shopPriceHandler;
         }
 
 

@@ -17,8 +17,6 @@ namespace Data.TradeRepository
 
         public long ToTradeCount { get; protected set; }
 
-        public uint PricePerItem { get; protected set; }
-
         public readonly string PublicName;
 
         public readonly string Name;
@@ -30,7 +28,6 @@ namespace Data.TradeRepository
 
         public abstract void Traded(long count);
 
-        public abstract void SetPricePerIten(uint price);
 
         public TradeRepo(string publicname, string name)
         {

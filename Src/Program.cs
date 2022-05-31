@@ -1,4 +1,6 @@
-﻿using Data.TradeRepository;
+﻿using Data.ShopPriceFilterRepoInJson;
+using Data.ShopPriceFiltersRepository;
+using Data.TradeRepository;
 using Data.TradeRepositoryInRAM;
 using Discord;
 using Discord.WebSocket;
@@ -13,6 +15,7 @@ using Shop.Services;
 using Shop.Services.OrderSessionRepository;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using Src;
 using Src.Services.CraftingService;
 using Src.Services.RepositoryLogger;
@@ -35,6 +38,8 @@ repo.AddNewRepository("bulletproofs", "Броники");
 
 repo.DeserializeRepo();
 
+
+
 var shoprepo = new ShopGenericRepository();
 
 shoprepo.AddExistRepository(repo.GetRepositoryByName("marijusig"));
@@ -50,7 +55,7 @@ var bot = new DiscordBotBuilder("ODY1MjE1MzM4MjY1MzEzMjgw.Gq5KSf.2AGpn_sdEP2DwLL
     .UseMenuHandler(menuservice);
 
 
-var ordermiddleware = new OrderShopHandler(ordersession, repo, bot.Client);
+var ordermiddleware = new OrderShopHandler(ordersession, repo, bot.Client, new ShopPriceHandler(new ShopPriceFilterRepositoryInJson()) );
 
 bot.Client.MessageReceived += ordermiddleware.HandleMessage;
 
@@ -64,7 +69,8 @@ var provider = new ServiceCollection()
     .AddSingleton<IOrderSessionRepository>(ordersession)
     .AddTransient<IPlacedOrderRepository, PlacedOrderRepository>()
     .AddTransient<IOrderStateLogger, OrderStateLogger>()
-
+    .AddTransient<IShopPriceFiltersRepository, ShopPriceFilterRepositoryInJson>()
+    .AddTransient<IShopPriceHandler, ShopPriceHandler>()
     .BuildServiceProvider();
 
 bot.AddServiceProvider(provider);

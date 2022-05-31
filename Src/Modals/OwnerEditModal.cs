@@ -19,14 +19,13 @@ namespace Src.Modals
         private IGenericRepository _repo;
         private IConfiguration _config;
 
-        public override string Title => "Если вы не хотите менять, укажите -1";
+        public override string Title => "-1 если ничего не менять";
 
         public override ModalComponentBuilder GetComponent()
         {
             return new ModalComponentBuilder()
                  .WithTextInput("Склад", "storage")
-                 .WithTextInput("Подготовлено к продаже", "deliverystorage")
-                 .WithTextInput("Цена за 1 штуку", "price");
+                 .WithTextInput("Подготовлено к продаже", "deliverystorage");
         }
 
         public override async Task OnComponentExecuted(SocketModal modal)
@@ -37,7 +36,6 @@ namespace Src.Modals
 
             if (!long.TryParse(TextInputsValues["storage"], out storage)) return;
             if (!long.TryParse(TextInputsValues["deliverystorage"], out deliverystorage)) return;
-            if (!int.TryParse(TextInputsValues["price"], out priceperitem)) return;
 
             var repos = _repo.GetRepositoryByName(AdditionalInfo["repname"]);
 
@@ -57,30 +55,6 @@ namespace Src.Modals
                 {
                     repos.Traded(repos.ToTradeCount - deliverystorage);
                 }
-            }
-            if(priceperitem != -1 && priceperitem >= 0)
-            {
-                repos.SetPricePerIten((uint)priceperitem);
-
-                ulong channelid;
-                using(StreamReader sr = new("takeorderchannelid.txt"))
-                {
-                    channelid = ulong.Parse(sr.ReadToEnd());
-                }
-
-
-                var channel = Client.GetGuild(ulong.Parse(_config["currentguildid"])).GetTextChannel(channelid);
-                var msgs = await channel.GetMessagesAsync(1).FlattenAsync();
-
-                await msgs.First().DeleteAsync();
-
-                var compbuilder = new AdditionalComponentBuilder();
-
-                compbuilder.WithSelectMenu<OrderMenu>();
-
-                await channel.SendMessageAsync("Что вы хотите заказать?", components: compbuilder.Build());
-
-
             }
 
             var messages = await modal.Channel.GetMessagesAsync(100).FlattenAsync();

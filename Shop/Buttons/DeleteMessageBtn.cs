@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Src.Buttons
+namespace Shop.Buttons
 {
     public class DeleteThisMsgBtn : ButtonBase
     {

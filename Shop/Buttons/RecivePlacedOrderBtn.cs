@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Middleware.Buttons;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Shop.Buttons
         private IPlacedOrderRepository _placedOrderRepository;
         private IGenericRepository _genericRepository;
         private IOrderStateLogger _orderStateLogger;
+        private IShopPriceHandler _shopPriceHandler;
 
         public override ButtonBuilder GetComponent()
         {
@@ -52,7 +54,7 @@ namespace Shop.Buttons
 
             await _orderStateLogger.OrderRecivedFromManager((arg.User as SocketGuildUser).DisplayName, placedorder.Id, trrepo.PublicName, placedorder.HowManyOrdered);
 
-            var embed = PlacedOrderMessageBuilder.GetEmbed(placedorder, _genericRepository);
+            var embed = PlacedOrderMessageBuilder.GetEmbed(placedorder, _genericRepository, _shopPriceHandler);
             var components = PlacedOrderMessageBuilder.GetComponent(placedorder);
             await arg.DeferAsync();
             await arg.Message.ModifyAsync(x =>
@@ -68,11 +70,12 @@ namespace Shop.Buttons
 
         }
 
-        public RecivePlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IOrderStateLogger orderStateLogger)
+        public RecivePlacedOrderBtn(IPlacedOrderRepository placedOrderRepository, IGenericRepository genericRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler)
         {
             _placedOrderRepository = placedOrderRepository;
             _genericRepository = genericRepository;
             _orderStateLogger = orderStateLogger;
+            _shopPriceHandler = shopPriceHandler;
         }
     }
 }

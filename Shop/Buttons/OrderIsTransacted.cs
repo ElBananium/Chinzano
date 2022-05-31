@@ -6,6 +6,7 @@ using Middleware;
 using Middleware.Buttons;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderRepository;
+using Shop.Services.ShopPriceHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Shop.Buttons
         private IConfiguration _config;
         private IGenericRepository _genericRepository;
         private IOrderStateLogger _orderStateLogger;
+        private IShopPriceHandler _shopPriceHandler;
 
         public override ButtonBuilder GetComponent()
         {
@@ -44,14 +46,14 @@ namespace Shop.Buttons
             
             
             
-            var resultembed = new EmbedBuilder() { Title = "Менеджер закрыл ваш заказ", Color = Color.Green }.AddField("Ваш обсуживал менеджер", order.WhosPickedNickname).AddField("Не забудьте оставить отзыв", "Удачи вам");
+            var resultembed = new EmbedBuilder() { Title = "Менеджер закрыл ваш заказ", Color = Color.Green }.AddField("Вас обсуживал менеджер", order.WhosPickedNickname).AddField("Не забудьте оставить отзыв", "Удачи вам");
             
             
             var compbuilder = new AdditionalComponentBuilder().WithButton<ExitOrderButton>().Build();
             await Guild.GetTextChannel(order.ChannelId).AddPermissionOverwriteAsync(arg.User, new(viewChannel: PermValue.Deny));
             await Guild.GetTextChannel(order.ChannelId).SendMessageAsync(embed: resultembed.Build(), components: compbuilder) ;
 
-            var archiveembed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository);
+            var archiveembed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository, _shopPriceHandler);
 
             await Guild.GetTextChannel(ulong.Parse(_config["orderarchivechannelid"])).SendMessageAsync(embed: archiveembed.Build());
             await _orderStateLogger.OrderTransacted((arg.User as SocketGuildUser).DisplayName.Split("|")[0], orderid, _genericRepository.GetRepositoryByName(order.TradeRepoName).PublicName);
@@ -64,12 +66,13 @@ namespace Shop.Buttons
             await arg.Message.DeleteAsync();
         }
 
-        public OrderIsTransacted(IPlacedOrderRepository placedOrderRepository, IConfiguration config,  IGenericRepository genericRepository, IOrderStateLogger orderStateLogger)
+        public OrderIsTransacted(IPlacedOrderRepository placedOrderRepository, IConfiguration config,  IGenericRepository genericRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler)
         {
             _placedOrderRepository = placedOrderRepository;
             _config = config;
             _genericRepository = genericRepository;
             _orderStateLogger = orderStateLogger;
+            _shopPriceHandler = shopPriceHandler;
         }
     }
 }

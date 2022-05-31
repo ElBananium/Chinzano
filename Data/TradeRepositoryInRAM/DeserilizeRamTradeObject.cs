@@ -16,6 +16,5 @@ namespace Data.TradeRepositoryInRAM
 
         public long ToTradeCount;
 
-        public uint PricePerItem;
     }
 }
