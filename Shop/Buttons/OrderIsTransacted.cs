@@ -4,7 +4,9 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Middleware;
 using Middleware.Buttons;
+using Shop.Services.BudgenManager;
 using Shop.Services.OrderStateLogger;
+using Shop.Services.PlacedOrderArchive;
 using Shop.Services.PlacedOrderRepository;
 using Shop.Services.ShopPriceHandler;
 using System;
@@ -22,6 +24,8 @@ namespace Shop.Buttons
         private IGenericRepository _genericRepository;
         private IOrderStateLogger _orderStateLogger;
         private IShopPriceHandler _shopPriceHandler;
+        private IBudgetManager _budgetManager;
+        private IPlacedOrderArchive _placedOrderArchive;
 
         public override ButtonBuilder GetComponent()
         {
@@ -57,8 +61,9 @@ namespace Shop.Buttons
 
             await Guild.GetTextChannel(ulong.Parse(_config["orderarchivechannelid"])).SendMessageAsync(embed: archiveembed.Build());
             await _orderStateLogger.OrderTransacted((arg.User as SocketGuildUser).DisplayName.Split("|")[0], orderid, _genericRepository.GetRepositoryByName(order.TradeRepoName).PublicName);
-
+            await _budgetManager.OrderMadeProfit(order);
             _placedOrderRepository.DeleteOrder(orderid);
+            _placedOrderArchive.AddToArchive(DateTime.Now,order);
 
 
 
@@ -66,13 +71,15 @@ namespace Shop.Buttons
             await arg.Message.DeleteAsync();
         }
 
-        public OrderIsTransacted(IPlacedOrderRepository placedOrderRepository, IConfiguration config,  IGenericRepository genericRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler)
+        public OrderIsTransacted(IPlacedOrderRepository placedOrderRepository, IConfiguration config,  IGenericRepository genericRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler, IBudgetManager budgetManager, IPlacedOrderArchive placedOrderArchive)
         {
             _placedOrderRepository = placedOrderRepository;
             _config = config;
             _genericRepository = genericRepository;
             _orderStateLogger = orderStateLogger;
             _shopPriceHandler = shopPriceHandler;
+            _budgetManager = budgetManager;
+            _placedOrderArchive = placedOrderArchive;
         }
     }
 }

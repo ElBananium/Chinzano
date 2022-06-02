@@ -107,9 +107,21 @@ namespace Src.Commands
             await pricefilterchannel.SendMessageAsync("Редактировать цены", components: compbuilder.Build());
 
 
+
+
+
+            var graphicsortablechannel= await Context.Guild.CreateTextChannelAsync("Графики и таблицы", x => x.CategoryId = category.Id);
+
+            compbuilder = new AdditionalComponentBuilder().WithSelectMenu<OwnerGraphicsAndTables>();
+
+           await graphicsortablechannel.SendMessageAsync("Что хотите?", components: compbuilder.Build());
+
+
+
             var logchannel = await Context.Guild.CreateTextChannelAsync("Логи", x => x.CategoryId = category.Id);
             var techlogchannel = await Context.Guild.CreateTextChannelAsync("Тех.Логи", x => x.CategoryId = category.Id);
             var archivechannel = await Context.Guild.CreateTextChannelAsync("Архив", x => x.CategoryId = category.Id);
+            var moneylogchannel = await Context.Guild.CreateTextChannelAsync("Деньги", x => x.CategoryId = category.Id);
             string configstring;
             using (StreamReader sr = new("botconfig.json"))
             {
@@ -121,6 +133,7 @@ namespace Src.Commands
             configdict["publiclogchannelid"] = logchannel.Id.ToString();
             configdict["techlogid"] = techlogchannel.Id.ToString();
             configdict["orderarchivechannelid"] = archivechannel.Id.ToString();
+            configdict["moneylogchannelid"] = moneylogchannel.Id.ToString();
 
             using (StreamWriter sw = new StreamWriter("botconfig.json"))
             {

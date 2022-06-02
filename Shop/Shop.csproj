@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Chinzano\Middleware.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\GraphDrawing\GraphDrawing.csproj" />
   </ItemGroup>
 
 </Project>

@@ -85,7 +85,9 @@ namespace Shop.Buttons
 
             if (timetodelivery == null) throw new ArgumentNullException();
 
-            var order = _placedOrderRepository.CreateOrder(session.TradeRepoName, (int)session.HowManyNeed, timetodelivery, IsToTrade, session.ChannelId);
+            var price = _shopPriceHandler.GetPrice(_genericRepository.GetRepositoryByName(session.TradeRepoName), (int)session.HowManyNeed);
+
+            var order = _placedOrderRepository.CreateOrder(session.TradeRepoName, (int)session.HowManyNeed, timetodelivery, IsToTrade, session.ChannelId, price);
 
             var embed = PlacedOrderMessageBuilder.GetEmbed(order, _genericRepository, _shopPriceHandler);
 

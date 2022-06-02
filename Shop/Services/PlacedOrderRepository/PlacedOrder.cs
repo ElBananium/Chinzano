@@ -24,6 +24,8 @@ namespace Shop.Services.PlacedOrderRepository
 
         public virtual string WhosPickedNickname { get; set; }
 
+        public virtual int Price { get; set; }
+
         public virtual ulong ChannelId { get; set; }
 
     }

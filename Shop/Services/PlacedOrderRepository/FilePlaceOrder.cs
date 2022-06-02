@@ -80,7 +80,11 @@ namespace Shop.Services.PlacedOrderRepository
             }
         }
 
-
+        public override int Price { get => _placedorder.Price; set {
+                _placedorder.Price = value;
+                Serialize();
+            } 
+        }
         public void Serialize()
         {
             using (StreamWriter sw = new StreamWriter(Directory.GetCurrentDirectory() + "/PlacedOrders/" + _placedorder.Id + ".json"))

@@ -1,4 +1,6 @@
-﻿using Data.ShopPriceFilterRepoInJson;
+﻿using Data.MoneyStorage;
+using Data.MoneyStorageFile;
+using Data.ShopPriceFilterRepoInJson;
 using Data.ShopPriceFiltersRepository;
 using Data.TradeRepository;
 using Data.TradeRepositoryInRAM;
@@ -12,8 +14,10 @@ using Middleware.Menu;
 using Middleware.Modals;
 using Shop;
 using Shop.Services;
+using Shop.Services.BudgenManager;
 using Shop.Services.OrderSessionRepository;
 using Shop.Services.OrderStateLogger;
+using Shop.Services.PlacedOrderArchive;
 using Shop.Services.PlacedOrderRepository;
 using Shop.Services.ShopPriceHandler;
 using Src;
@@ -71,6 +75,9 @@ var provider = new ServiceCollection()
     .AddTransient<IOrderStateLogger, OrderStateLogger>()
     .AddTransient<IShopPriceFiltersRepository, ShopPriceFilterRepositoryInJson>()
     .AddTransient<IShopPriceHandler, ShopPriceHandler>()
+    .AddTransient<IMoneyStorage, MoneyStorage>()
+    .AddTransient<IBudgetManager, BudgetManager>()
+    .AddTransient<IPlacedOrderArchive, PlacedOrderArchive>()
     .BuildServiceProvider();
 
 bot.AddServiceProvider(provider);

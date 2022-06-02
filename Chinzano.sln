@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Src", "Src\Src.csproj", "{64E04D08-262B-4EF2-A9E0-434061EAE85C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop", "Shop\Shop.csproj", "{1133349F-DB00-41EB-8642-DED3B5A6AC75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop", "Shop\Shop.csproj", "{1133349F-DB00-41EB-8642-DED3B5A6AC75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphDrawing", "GraphDrawing\GraphDrawing.csproj", "{6A164276-576B-481F-B7DA-523B69DE9B26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1133349F-DB00-41EB-8642-DED3B5A6AC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1133349F-DB00-41EB-8642-DED3B5A6AC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1133349F-DB00-41EB-8642-DED3B5A6AC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A164276-576B-481F-B7DA-523B69DE9B26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A164276-576B-481F-B7DA-523B69DE9B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A164276-576B-481F-B7DA-523B69DE9B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A164276-576B-481F-B7DA-523B69DE9B26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

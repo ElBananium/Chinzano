@@ -13,12 +13,12 @@ namespace Shop.Services.PlacedOrderRepository
     {
         private static object LastOrderNumberLock = new object();
 
-        public PlacedOrder CreateOrder(string TradeRepoName, int HowManyOrdered, string WhatTime, bool IsRecived, ulong ChannelId)
+        public PlacedOrder CreateOrder(string TradeRepoName, int HowManyOrdered, string WhatTime, bool IsRecived, ulong ChannelId, int price)
         {
             
 
             var order = new PlacedOrder() { HowManyOrdered = HowManyOrdered, WhatTime = WhatTime, IsRecived = IsRecived, TradeRepoName = TradeRepoName, Id = GetLastOrderNumber() + 1, ChannelId = ChannelId };
-
+            order.Price = price;
             order.IsPicked = false;
             order.WhosPickedId = 0;
 

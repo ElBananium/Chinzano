@@ -11,7 +11,7 @@ namespace Shop.Services.PlacedOrderRepository
     {
         public PlacedOrder GetOrder(int id);
 
-        public PlacedOrder CreateOrder(string TradeRepoName,int HowManyOrdered, string WhatTime, bool IsRecived, ulong ChannelId);
+        public PlacedOrder CreateOrder(string TradeRepoName,int HowManyOrdered, string WhatTime, bool IsRecived, ulong ChannelId, int price);
 
         public void DeleteOrder(int id);
 

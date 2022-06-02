@@ -60,8 +60,9 @@ namespace Middleware
         private Task HandleButtonAsync(SocketMessageComponent arg)
         {
 
-            Task.Run(() => Buttons.ExecuteComponentAsync(arg));
+            var task = Task.Run(() => Buttons.ExecuteComponentAsync(arg));
 
+            task.ContinueWith(CloseTask);
             return Task.CompletedTask;
         }
 
@@ -124,9 +125,19 @@ namespace Middleware
         private Task HandleMenuAsync(SocketMessageComponent arg)
         {
             
-             Task.Run(() => Menu.ExecuteComponentAsync(arg));
+             var task = Task.Run(() => Menu.ExecuteComponentAsync(arg));
+            task.ContinueWith(CloseTask);
 
             return Task.CompletedTask;
+        }
+
+        private void CloseTask(Task arg1)
+        {
+            if (arg1.Exception == null) return;
+
+            Console.WriteLine(arg1.Exception.Message);
+            Console.WriteLine(arg1.Exception.StackTrace);
+            Console.WriteLine(arg1.Exception.InnerException);
         }
 
         private Task HandleModalAsync(SocketModal arg)
@@ -134,10 +145,10 @@ namespace Middleware
 
             
 
-            Task.Run(() => {
+            var task = Task.Run(() => {
                 Modals.ExecuteComponentAsync(arg);
                 });
-
+            task.ContinueWith(CloseTask);
             return Task.CompletedTask;
         }
 
