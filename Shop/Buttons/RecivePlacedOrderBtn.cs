@@ -27,6 +27,9 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+
+            await arg.DeferAsync();
+
             int orderid = int.Parse(AdditionalInfo["orderid"]);
 
 
@@ -56,7 +59,7 @@ namespace Shop.Buttons
 
             var embed = PlacedOrderMessageBuilder.GetEmbed(placedorder, _genericRepository, _shopPriceHandler);
             var components = PlacedOrderMessageBuilder.GetComponent(placedorder);
-            await arg.DeferAsync();
+            
             await arg.Message.ModifyAsync(x =>
             {
                 x.Embed = embed.Build();

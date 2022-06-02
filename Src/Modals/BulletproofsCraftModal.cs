@@ -38,14 +38,16 @@ namespace Src.Modals
 
                 if (!int.TryParse(TextInputsValues["count"], out count)) return;
 
-                var materialrepo = _repos.GetRepositoryByName(_config["materialsreponame"]);
+            await modal.DeferAsync();
+
+            var materialrepo = _repos.GetRepositoryByName(_config["materialsreponame"]);
                 var bulletproofsrepo = _repos.GetRepositoryByName(_config["bulletproofreponame"]);
 
                 var crafting = _craftingService;
                 crafting.Configure(materialrepo, bulletproofsrepo, int.Parse(_config["pricetocraftbulletperoof"]));
 
 
-                await modal.DeferAsync();
+                
                 if (!crafting.CanYouCraft(count))
                 {
                 var embed = new EmbedBuilder() { Title = "Ошибка | На складе недостаточно материалов", Color = Color.Red };

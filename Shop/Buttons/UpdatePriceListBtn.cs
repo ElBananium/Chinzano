@@ -24,6 +24,7 @@ namespace Shop.Buttons
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             await arg.DeferAsync();
+            
             ulong pricelistchannelid;
             using(StreamReader sr = new StreamReader("pricelistchannelid.txt"))
             {

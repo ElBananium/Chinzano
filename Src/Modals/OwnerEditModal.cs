@@ -37,6 +37,8 @@ namespace Src.Modals
             if (!long.TryParse(TextInputsValues["storage"], out storage)) return;
             if (!long.TryParse(TextInputsValues["deliverystorage"], out deliverystorage)) return;
 
+            await modal.DeferAsync();
+
             var repos = _repo.GetRepositoryByName(AdditionalInfo["repname"]);
 
             if (storage != -1 && storage >= 0)
@@ -64,7 +66,7 @@ namespace Src.Modals
             }
 
 
-            await modal.DeferAsync();
+            
 
         }
 

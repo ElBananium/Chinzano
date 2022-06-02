@@ -28,13 +28,13 @@ namespace Src.Modals
             var user = Client
                  .GetGuild(guildid).GetUser(modal.User.Id);
 
-
-
-             await user.ModifyAsync(x => x.Nickname = $"{TextInputsValues["gamenickname"].Trim()} | {TextInputsValues["realname"].Trim()}");
-
-
-
             await modal.DeferAsync();
+
+            await user.ModifyAsync(x => x.Nickname = $"{TextInputsValues["gamenickname"].Trim()} | {TextInputsValues["realname"].Trim()}");
+
+
+
+            
         }
 
         public RegistrationModal(IConfiguration config)

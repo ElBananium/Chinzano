@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GraphDrawing.GraphDrawer
 {
-    public class GraphDrawer
+    public class GraphDrawerClient
     {
 
         private IEnumerable<SalesGraphPoint> _salesGraphPoints;
@@ -132,7 +132,7 @@ namespace GraphDrawing.GraphDrawer
             return bitmap;
         }
 
-        public GraphDrawer(IEnumerable<SalesGraphPoint> salesGraphPoints)
+        public GraphDrawerClient(IEnumerable<SalesGraphPoint> salesGraphPoints)
         {
             _salesGraphPoints = salesGraphPoints;
         }

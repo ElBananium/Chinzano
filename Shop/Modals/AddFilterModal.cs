@@ -31,10 +31,11 @@ namespace Shop.Modals
             if (!uint.TryParse(TextInputsValues["count"], out count)) return;
 
             if(!int.TryParse(TextInputsValues["price"], out price)) return;
+            await arg.DeferAsync();
             var repo = _shopGenericRepository.GetRepositoryByName(AdditionalInfo["reponame"]);
             _shopPricefilters.AddFilter(repo, count, price);
 
-            await arg.DeferAsync();
+            
 
         }
 

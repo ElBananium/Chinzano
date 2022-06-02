@@ -6,6 +6,7 @@ using Data.TradeRepository;
 using Data.TradeRepositoryInRAM;
 using Discord;
 using Discord.WebSocket;
+using GraphDrawing.GraphImageService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Middleware;
@@ -15,6 +16,7 @@ using Middleware.Modals;
 using Shop;
 using Shop.Services;
 using Shop.Services.BudgenManager;
+using Shop.Services.GraphicsOrTableInfoHandler;
 using Shop.Services.OrderSessionRepository;
 using Shop.Services.OrderStateLogger;
 using Shop.Services.PlacedOrderArchive;
@@ -78,6 +80,8 @@ var provider = new ServiceCollection()
     .AddTransient<IMoneyStorage, MoneyStorage>()
     .AddTransient<IBudgetManager, BudgetManager>()
     .AddTransient<IPlacedOrderArchive, PlacedOrderArchive>()
+    .AddTransient<IGraphicsOrTableInfoHandler, GraphicsOrTableInfoHandler>()
+    .AddTransient<IGraphImageService, GraphImageService>()
     .BuildServiceProvider();
 
 bot.AddServiceProvider(provider);
@@ -104,12 +108,12 @@ AdditionalComponentBuilder.ModalsService = modalservice;
 bot.Client.Log += Src.LogMessage.Log;
 
 AntiExceptionHelper.client = bot.Client;
-AntiExceptionHelper.CurrentGuildId = ulong.Parse(configuration["currentguildid"]);
-AntiExceptionHelper.TechLogChannelId = ulong.Parse(configuration["techlogid"]);
-
+AntiExceptionHelper.config = configuration;
 
 
 bot.Client.Log += AntiExceptionHelper.Log;
+
+bot.CloseTaskEvent += AntiExceptionHelper.LogException;
 
 bot.Build();
 

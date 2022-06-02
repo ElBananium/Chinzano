@@ -31,10 +31,12 @@ namespace Src.Modals
             if (!long.TryParse(TextInputsValues["storage"], out count)) return;
             if (count <= 0) return;
 
+
+            await modal.DeferAsync();
             var repo = _repo.GetRepositoryByName(AdditionalInfo["repname"]);
             repo.Deposit(count);
             await _replogger.LogDeposit(modal.User, repo, count);
-            await modal.DeferAsync();
+            
 
             var messages = await modal.Channel.GetMessagesAsync(100).FlattenAsync();
             if (messages.Count() > 1)

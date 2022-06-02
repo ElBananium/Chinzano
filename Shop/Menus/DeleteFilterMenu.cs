@@ -42,7 +42,7 @@ namespace Shop.Menus
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
             await arg.DeferAsync();
-
+            
             await arg.Message.DeleteAsync();
             var repo = _shopGenericRepository.GetRepositoryByName(AdditionalInfo["reponame"]);
 

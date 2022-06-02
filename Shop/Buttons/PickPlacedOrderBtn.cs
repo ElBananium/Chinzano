@@ -29,6 +29,7 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+            await arg.DeferAsync();
             int orderid = int.Parse(AdditionalInfo["orderid"]);
 
             var order = _placedOrderRepository.GetOrder(orderid);
@@ -44,7 +45,7 @@ namespace Shop.Buttons
 
             await _orderStateLogger.OrderPicked(orderid, order.WhosPickedNickname);
             await Guild.GetTextChannel(order.ChannelId).AddPermissionOverwriteAsync(arg.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
-            await arg.DeferAsync();
+            
             await arg.Message.ModifyAsync(x =>
             {
                 x.Embed = embed.Build();

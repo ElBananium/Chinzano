@@ -29,12 +29,12 @@ namespace Src.Modals
             long count;
             if (!long.TryParse(TextInputsValues["storage"], out count)) return;
             if(count <= 0) return;
-
+            await modal.DeferAsync();
             var repo = _repo.GetRepositoryByName(AdditionalInfo["repname"]);
 
             repo.Withdraw(count);
 
-            await modal.DeferAsync();
+            
             await _replogger.LogWidthDraw(modal.User, repo, count);
 
 

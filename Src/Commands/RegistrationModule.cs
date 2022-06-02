@@ -41,7 +41,7 @@ namespace Src.Commands
         }
 
         [Command("CreateStockCategory")]
-        public async Task CreateStockCategory()
+        public async Task CreateStockCategory(SocketRole managerRole)
         {
             if (!Context.Guild.GetUser(Context.User.Id).GuildPermissions.Administrator) return;
             var category = await Context.Guild.CreateCategoryChannelAsync("Складской учет");
@@ -50,10 +50,10 @@ namespace Src.Commands
 
             //notifyformanagerchannelid
             var notifychannel = await Context.Guild.CreateTextChannelAsync("Уведомления", x => x.CategoryId = category.Id);
-
+            await notifychannel.AddPermissionOverwriteAsync(managerRole, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Deny));
 
             var channel = await Context.Guild.CreateTextChannelAsync("Открыть панель менеджера", x => x.CategoryId = category.Id);
-
+            await channel.AddPermissionOverwriteAsync(managerRole, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Deny));
             var compbuilder = new AdditionalComponentBuilder().WithButton<ManagerMenuBuilderBtn>();
 
 
@@ -61,7 +61,7 @@ namespace Src.Commands
 
 
             channel = await Context.Guild.CreateTextChannelAsync("Крафт броников", x => x.CategoryId = category.Id);
-
+            await channel.AddPermissionOverwriteAsync(managerRole, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Deny));
 
             compbuilder = new AdditionalComponentBuilder().WithButton<BulletproofsCraftButton>();
 
@@ -90,6 +90,7 @@ namespace Src.Commands
         [Command("CreateOwnerCategory")]
         public async Task CreateOwnerCategory()
         {
+            
 
             if (!Context.Guild.GetUser(Context.User.Id).GuildPermissions.Administrator) return;
 

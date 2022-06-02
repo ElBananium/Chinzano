@@ -34,6 +34,7 @@ namespace Shop.Menus
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+            await arg.DeferAsync();
             var value = arg.Data.Values.First();
 
             var info = new Dictionary<string, string>();
@@ -52,7 +53,7 @@ namespace Shop.Menus
 
             await arg.Channel.SendMessageAsync("Редактировать", components: components.Build());
 
-            await arg.DeferAsync();
+            
         }
 
         public PriceShopRepoMenu(IShopGenericRepository shoprepo)

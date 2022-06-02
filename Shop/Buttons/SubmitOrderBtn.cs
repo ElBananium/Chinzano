@@ -31,8 +31,11 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            
-                var session = _orderSession.GetSession((ulong)arg.ChannelId);
+
+            await arg.DeferAsync();
+
+
+            var session = _orderSession.GetSession((ulong)arg.ChannelId);
 
                 if (session == null) return;
 
@@ -63,8 +66,7 @@ namespace Shop.Buttons
 
 
                 await NotifyOrder(session, isResorved, arg);
-                await arg.DeferAsync();
-
+                
 
 
         }
@@ -101,6 +103,8 @@ namespace Shop.Buttons
             await (channelwithorder.Channel as SocketGuildChannel).AddPermissionOverwriteAsync(channelwithorder.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
 
             await (channelwithorder.Channel as SocketGuildChannel).ModifyAsync(x => x.Name = "Заказ номер " + order.Id);
+
+            await channelwithorder.Message.ModifyAsync(x => x.Components = new ComponentBuilder().Build() );
 
 
 

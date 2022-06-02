@@ -29,6 +29,8 @@ namespace Shop.Menus
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+            await arg.DeferAsync();
+
             var msgs = (await arg.Channel.GetMessagesAsync(100).FlattenAsync()).ToArray();
             if (msgs.Length > 1)
             {
@@ -41,6 +43,8 @@ namespace Shop.Menus
             dict.Add("info", arg.Data.Values.First());
             var compbuilder = new AdditionalComponentBuilder().WithSelectMenu<GetGraphicsOrTableMenu>(dict);
            await arg.Channel.SendMessageAsync("Информация о чем вам нужна?", components: compbuilder.Build());
+
+            
             
         }
     }

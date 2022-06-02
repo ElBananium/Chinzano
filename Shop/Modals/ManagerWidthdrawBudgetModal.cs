@@ -25,10 +25,10 @@ namespace Shop.Modals
             int count;
             if (!int.TryParse(TextInputsValues["storage"], out count)) return;
             if (count <= 0) return;
-
+            await modal.DeferAsync();
             await _budget.ManagerWidthDrawSomeMoney(Guild.GetUser(modal.User.Id).DisplayName.Split("|")[0], count, TextInputsValues["reason"]);
 
-            await modal.DeferAsync();
+            
             
 
 

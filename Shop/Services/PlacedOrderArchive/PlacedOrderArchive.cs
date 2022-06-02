@@ -59,7 +59,7 @@ namespace Shop.Services.PlacedOrderArchive
                 if (File.Exists("OrdersArchive/" + filename + ".json"))
                 {
                     string filestring;
-                    using (var sr = new StreamReader("OrdersArchive / " + filename + ".json"))
+                    using (var sr = new StreamReader("OrdersArchive/" + filename + ".json"))
                     {
                         filestring = sr.ReadToEnd();
 

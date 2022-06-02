@@ -31,6 +31,9 @@ namespace Middleware
 
         public IServiceProvider ServiceProvider;
 
+
+        public event Action<Task> CloseTask;
+
         public DiscordBot(DiscordSocketConfig botconfig)
         {
             Client = new DiscordSocketClient(botconfig);
@@ -131,14 +134,7 @@ namespace Middleware
             return Task.CompletedTask;
         }
 
-        private void CloseTask(Task arg1)
-        {
-            if (arg1.Exception == null) return;
 
-            Console.WriteLine(arg1.Exception.Message);
-            Console.WriteLine(arg1.Exception.StackTrace);
-            Console.WriteLine(arg1.Exception.InnerException);
-        }
 
         private Task HandleModalAsync(SocketModal arg)
         {

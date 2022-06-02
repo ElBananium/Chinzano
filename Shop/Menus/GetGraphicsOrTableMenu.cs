@@ -41,6 +41,15 @@ namespace Shop.Menus
             AdditionalInfo.Add("choose", arg.Data.Values.First());
             var compbuilder = AdditionalComponentBuilder.GetModal<DrawGraphicOrTable>(AdditionalInfo);
             await arg.RespondWithModalAsync(compbuilder.Build());
+
+            var msgs = (await arg.Channel.GetMessagesAsync(100).FlattenAsync()).ToArray();
+            if (msgs.Length > 2)
+            {
+                for(int i = 0; i < msgs.Length-2; i++)
+                {
+                    await msgs[i].DeleteAsync();
+                }
+            }
         }
 
         public GetGraphicsOrTableMenu(IShopGenericRepository shopGenericRepository)

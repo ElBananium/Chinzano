@@ -26,9 +26,14 @@ namespace Shop.Services.GraphicsOrTableInfoHandler
                 var orders = _placedOrderArchive.GetOrdersInDay(date);
 
                 int count = 0;
-                foreach(var order in orders)
+                if (orders == null)
                 {
-                    count += order.Price;
+                    count = 0;
+                    continue;
+                }
+                foreach (var order in orders)
+                {
+                    count += order.Price*order.HowManyOrdered;
                 }
 
                 list.Add(new SalesGraphPoint(i, count));
@@ -44,8 +49,13 @@ namespace Shop.Services.GraphicsOrTableInfoHandler
                 var date = new DateTime(DateTime.Now.Year, mounth, i);
 
                 var orders = _placedOrderArchive.GetOrdersInDay(date).Where(x => x.TradeRepoName == tradereponame);
-
                 int count = 0;
+                if (orders == null)
+                {
+                    count = 0;
+                    continue;
+                }
+                
                 foreach (var order in orders)
                 {
                     count += order.HowManyOrdered;

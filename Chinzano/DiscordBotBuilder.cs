@@ -21,6 +21,8 @@ namespace Middleware
         private bool _useMenuHandler = false;
         private bool _useLogger = false;
 
+        public event Action<Task> CloseTaskEvent;
+
         private DiscordBot _bot;
         public DiscordSocketClient Client => _bot.Client;
 
@@ -85,7 +87,7 @@ namespace Middleware
 
         public DiscordBot Build()
         {
-            
+            _bot.CloseTask += CloseTaskEvent;
 
             _bot.ConfigureHandlers(_useButtonBuilder, _useCommandHandler, _useModalHandler, _useMenuHandler, _useLogger);
 

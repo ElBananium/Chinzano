@@ -19,7 +19,7 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-
+            await arg.DeferAsync();
             await (arg.Channel as SocketGuildChannel).DeleteAsync();
         }
 

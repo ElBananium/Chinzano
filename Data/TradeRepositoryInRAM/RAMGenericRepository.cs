@@ -43,7 +43,7 @@ namespace Data.TradeRepositoryInRAM
             }
             var repolist = JsonConvert.DeserializeObject<List<DeserilizeRamTradeObject>>(stringfromfile);
 
-            if (repolist.Count() == 0) return;
+            if (repolist==null) return;
 
             foreach (var repo in repolist)
             {

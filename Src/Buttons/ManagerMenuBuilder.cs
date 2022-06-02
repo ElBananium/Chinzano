@@ -27,11 +27,11 @@ namespace Src.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+
             await arg.DeferAsync();
 
-
             var channel = arg.Channel as SocketTextChannel;
-
+            
             await channel.AddPermissionOverwriteAsync(arg.User, new OverwritePermissions(viewChannel: PermValue.Deny));
 
 

@@ -20,11 +20,11 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
-            
-                var components = new AdditionalComponentBuilder().WithSelectMenu<DeleteFilterMenu>(AdditionalInfo).WithButton<DeleteThisMsgBtn>();
+            await arg.DeferAsync();
+            var components = new AdditionalComponentBuilder().WithSelectMenu<DeleteFilterMenu>(AdditionalInfo).WithButton<DeleteThisMsgBtn>();
                 await arg.Channel.SendMessageAsync("Какой фильтр удалить?", components: components.Build());
 
-                await arg.DeferAsync();
+                
             
         }
     }

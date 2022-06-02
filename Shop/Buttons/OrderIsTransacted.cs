@@ -34,6 +34,9 @@ namespace Shop.Buttons
 
         public override async Task OnComponentExecuted(SocketMessageComponent arg)
         {
+            await arg.DeferAsync();
+            await arg.Message.DeleteAsync();
+
             int orderid = int.Parse(AdditionalInfo["orderid"]);
 
             var order = _placedOrderRepository.GetOrder(orderid);
@@ -68,7 +71,7 @@ namespace Shop.Buttons
 
 
 
-            await arg.Message.DeleteAsync();
+            
         }
 
         public OrderIsTransacted(IPlacedOrderRepository placedOrderRepository, IConfiguration config,  IGenericRepository genericRepository, IOrderStateLogger orderStateLogger, IShopPriceHandler shopPriceHandler, IBudgetManager budgetManager, IPlacedOrderArchive placedOrderArchive)

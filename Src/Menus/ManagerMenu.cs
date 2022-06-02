@@ -42,6 +42,7 @@ namespace Src.Menus
 
         public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
+            await modal.DeferAsync();
             var info = modal.Data.Values.First();
 
             var repository = _repo.GetRepositoryByName(info);
@@ -70,7 +71,7 @@ namespace Src.Menus
             components.WithButton<DeleteThisMsgBtn>();
 
 
-            await modal.DeferAsync();
+            
             
             
 

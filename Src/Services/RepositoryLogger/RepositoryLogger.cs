@@ -29,7 +29,7 @@ namespace Src.Services.RepositoryLogger
             embed.Title = $"{repo.PublicName} | {name} положил {count}";
 
             await SendMessageToPublicLog(embed);
-            await SendMessageToTechLog(user, repo, count, TransactionType.Deposit);
+
         }
 
         public async Task LogWidthDraw(SocketUser user, TradeRepo repo, long count)
@@ -45,7 +45,7 @@ namespace Src.Services.RepositoryLogger
             embed.Title = $"{repo.PublicName} | {name} снял  {count}";
 
             await SendMessageToPublicLog(embed);
-            await SendMessageToTechLog(user, repo, count, TransactionType.WidthDraw);
+
         }
 
         public async Task SendMessageToPublicLog(EmbedBuilder embed)
@@ -54,12 +54,7 @@ namespace Src.Services.RepositoryLogger
                 .GetTextChannel(ulong.Parse(_configuration["publiclogchannelid"]))
                 .SendMessageAsync(embed: embed.Build());
         }
-        public async Task SendMessageToTechLog(SocketUser user, TradeRepo repo, long count, TransactionType type)
-        {
-            await _client.GetGuild(ulong.Parse(_configuration["currentguildid"]))
-               .GetTextChannel(ulong.Parse(_configuration["techlogid"]))
-               .SendMessageAsync($"{user.Id},{repo.Name},{count},{type}");
-        }
+
 
         public async Task LogCraft(SocketUser user, TradeRepo fromrepo, TradeRepo toRepo, long howmanyused, long howmanycrafted)
         {
@@ -75,8 +70,6 @@ namespace Src.Services.RepositoryLogger
 
                 await SendMessageToPublicLog(embed);
 
-                await SendMessageToTechLog(user, fromrepo, howmanyused, TransactionType.WidthDraw);
-                await SendMessageToTechLog(user, toRepo, howmanycrafted, TransactionType.Deposit);
         }
 
         public RepositoryLogger(IConfiguration config, DiscordSocketClient client)
