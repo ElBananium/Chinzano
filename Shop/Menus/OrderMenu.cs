@@ -42,14 +42,14 @@ namespace Shop.Menus
         public override async Task OnComponentExecuted(SocketMessageComponent modal)
         {
             await modal.DeferAsync();
-            var guild = Client.GetGuild(ulong.Parse(_config["currentguildid"]));
 
-            var category = guild.GetTextChannel(modal.Channel.Id).Category;
 
-            var channel = await guild.CreateTextChannelAsync("Заказ", x => x.CategoryId = category.Id);
+            var category = Guild.GetTextChannel(modal.Channel.Id).Category;
+
+            var channel = await Guild.CreateTextChannelAsync("Заказ", x => x.CategoryId = category.Id);
 
             
-            await channel.AddPermissionOverwriteAsync(guild.EveryoneRole, new(viewChannel: PermValue.Deny));
+            await channel.AddPermissionOverwriteAsync(Guild.EveryoneRole, new(viewChannel: PermValue.Deny));
             await channel.AddPermissionOverwriteAsync(modal.User, new(viewChannel: PermValue.Allow, sendMessages: PermValue.Allow));
 
             _orderSessionService.AddNewSession(modal.User.Id, channel.Id, modal.Data.Values.First());

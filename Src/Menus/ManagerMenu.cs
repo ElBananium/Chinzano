@@ -90,8 +90,6 @@ namespace Src.Menus
 
                 await arg.Channel.SendMessageAsync(embed: embed.Build(), components: components.Build());
             }
-
-            await arg.DeferAsync();
         }
 
         public ManagerMenu(IGenericRepository repo, IMoneyStorage moneyStorage)

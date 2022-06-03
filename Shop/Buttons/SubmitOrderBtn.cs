@@ -51,13 +51,11 @@ namespace Shop.Buttons
                     if (repo.Count < session.HowManyNeed)
                     {
                         await arg.Channel.SendMessageAsync("Увы, у нас на складе недостаточно нужного товара, мы не можем принять ваш заказ.");
-                        await arg.DeferAsync();
                         return;
                     }
                     _orderSession.RemoveSession(session.ChannelId);
                     repo.ToTrade(session.HowManyNeed);
                     await NotifyOrder(session, true, arg);
-                    await arg.DeferAsync();
                     return;
                 }
                 _orderSession.RemoveSession(session.ChannelId);
